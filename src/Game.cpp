@@ -112,17 +112,16 @@ void Game::Create()
     mRenderer.InitTextData();
 
     // load required textures
-    TextureManager::Instance().LoadTexture("images/human.png");
-    TextureManager::Instance().LoadTexture("images/wraith.png");
-    TextureManager::Instance().LoadTexture("images/tileset32.png");
+    TextureManager::Instance().LoadTexture("images/test.png");
+    TextureManager::Instance().LoadTexture("images/tileset.png");
 
     // load required fonts
     mRenderer.LoadFont("fonts/arial.ttf", 16);
 
     // test map generator
-    mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset32.png"), 16, mRenderer);
+    mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
-    mPlayer = new Player(1.0f, 1.0f, TextureManager::Instance().GetTexture("images/human.png"));
+    mPlayer = new Player(1.0f, 1.0f, TextureManager::Instance().GetTexture("images/test.png"));
 
     // open lua
     L = luaL_newstate();

@@ -6,6 +6,7 @@ LIBS := -lmingw32 -lSDL2main -lSDL2 -llua54 -lfreetype
 OBJECTS := glad.o\
 	Input.o\
 	Random.o\
+	Vector2.o\
 	TextureManager.o\
 	Renderer.o\
 	Sprite.o\
@@ -18,7 +19,7 @@ OBJECTS := glad.o\
 	main.o
 
 # -ldl flag needed for linux i think
-# -lmingw32 -lSDL2main -lSDL2 -llua54 needed for windows
+# -lmingw32 -lSDL2main -lSDL2 -llua54 -lfreetype needed for windows
 # just -lSDL2 -llua for mac i think
 
 2dgame: $(OBJECTS)
