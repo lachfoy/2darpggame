@@ -122,7 +122,7 @@ void Game::Create()
     // test map generator
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset32.png"), 16, mRenderer);
 
-    mPlayer = new Player(1, 1, TextureManager::Instance().GetTexture("images/human.png"));
+    mPlayer = new Player(1.0f, 1.0f, TextureManager::Instance().GetTexture("images/human.png"));
 
     // open lua
     L = luaL_newstate();
