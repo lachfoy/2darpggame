@@ -18,7 +18,7 @@ Map::Map(int mapWidth, int mapHeight, uint8_t* tileData, bool* solidData, GLuint
 
 Map::~Map()
 {
-    std::cout << "Map::Destructor called!\n";
+    std::cout << "Map:: Destructor called!\n";
 
     // delete the map data!
     delete[] mSolidData;
@@ -32,6 +32,8 @@ void Map::DrawMap(Renderer& renderer)
 
 Map* Map::RandomMap(int width, int height, GLuint tilesetTexture, int tileSize, Renderer& renderer)
 {
+    std::cout << "Map:: Generating random map\n";
+
     uint8_t* tileData = new uint8_t[width * height];
     bool* solidData = new bool[width * height];
 

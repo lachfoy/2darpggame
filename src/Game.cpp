@@ -113,6 +113,7 @@ void Game::Create()
 
     // load required textures
     TextureManager::Instance().LoadTexture("images/test.png");
+    TextureManager::Instance().LoadTexture("images/enemy.png");
     TextureManager::Instance().LoadTexture("images/tileset.png");
 
     // load required fonts
@@ -121,7 +122,9 @@ void Game::Create()
     // test map generator
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
-    mPlayer = new Player(Vector2(3.0f, 3.0f), TextureManager::Instance().GetTexture("images/test.png"));
+    mPlayer = new Player(Vector2(10.0f, 10.0f), TextureManager::Instance().GetTexture("images/test.png"));
+
+    EnemyManager::Instance().CreateEnemy(Vector2(15.0f, 15.0f), "scripts/enemy.lua");
 
     // open lua
     L = luaL_newstate();
@@ -129,21 +132,9 @@ void Game::Create()
 
     // lua_register(L, "CreateEnemy", wrap_CreateEnemy); // expose api function to lua
 
-    if (luaL_dofile(L, "scripts/test.lua") != 0) {
+    if (luaL_dofile(L, "scripts/main.lua") != 0) {
         // abort, idk. todo: error checking, put the program back into a safe state
         std::cout << lua_tostring(L, -1) << std::endl; // error at top of stack
-    }
-
-    lua_getglobal(L, "init"); // get function from lua script, i.e. push it onto lua stack
-    if (lua_isfunction(L, -1)) {
-        lua_pushlightuserdata(L, this); // push "game" object pointer to lua
-
-        // call the function
-        if (lua_pcall(L, 1, 0, 0) != 0) {
-            std::cout << lua_tostring(L, -1) << std::endl; // error
-        }
-
-        std::cout << "C++: called lua function init\n";
     }
 }
 
@@ -173,10 +164,10 @@ void Game::Update(float deltaTime)
 
     mRenderer.SetCameraPosition(mPlayer->Position().x, mPlayer->Position().y);
 
-    //EnemyManager::Instance().UpdateEnemies(*mMap, *mPlayer);
+    EnemyManager::Instance().UpdateEnemies(deltaTime);
 
     // "housekeeping"
-    //EnemyManager::Instance().HousekeepEnemies();
+    EnemyManager::Instance().HousekeepEnemies();
 
 }
 
@@ -185,7 +176,7 @@ void Game::Draw()
     glClear(GL_COLOR_BUFFER_BIT);
     mMap->DrawMap(mRenderer);   
 
-    // EnemyManager::Instance().DrawEnemies(mRenderer);
+    EnemyManager::Instance().DrawEnemies(mRenderer);
     // EnemyManager::Instance().DrawEnemyHealthbars(mRenderer);
 
     mPlayer->Draw(mRenderer);

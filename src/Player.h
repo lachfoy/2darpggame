@@ -28,9 +28,9 @@ public:
 private:
     Vector2 mDirection;
     float mSpeed;
-    int mHealth;
     int mMaxHealth;
-
+    int mHealth;
+    
 };
 
 #endif

@@ -17,7 +17,7 @@ void EnemyManager::CreateEnemy(Vector2 position, const char* enemyScript)
 void EnemyManager::UpdateEnemies(float deltaTime)
 {
     for (const auto& enemy : mEnemies) {
-        //enemy->Update(map, player, mEnemies);
+        enemy->Update(deltaTime);
     }
 }
 

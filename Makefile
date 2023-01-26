@@ -11,6 +11,7 @@ OBJECTS := glad.o\
 	Renderer.o\
 	Sprite.o\
 	Player.o\
+	EnemyBehaviours.o\
 	Enemy.o\
 	EnemyManager.o\
 	Map.o\

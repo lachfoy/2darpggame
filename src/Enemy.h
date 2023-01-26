@@ -3,10 +3,28 @@
 
 #include "Sprite.h"
 
+#ifdef __APPLE__
+extern "C"
+{
+    #include <lua/lua.h>
+    #include <lua/lauxlib.h>
+    #include <lua/lualib.h>
+}
+#else
+extern "C"
+{
+    #include <lua.h>
+    #include <lauxlib.h>
+    #include <lualib.h>
+}
+#endif
+
 #include "Vector2.h"
 #include <glad/glad.h>
 #include "Renderer.h"
 #include "Player.h"
+#include "EnemyBehaviours.h"
+#include <memory>
 
 class Enemy : public Sprite
 {
@@ -27,17 +45,24 @@ public:
     // methods
     void TakeDamage(int damage);
     void Heal(int amount);
-    void Update(Player& player);
+    void Update(float deltaTime);
     void DrawHealthbar(Renderer& renderer);
 
-protected:
+    // api
+    static int MoveTo(lua_State* L);
+    static int Wait(lua_State* L);
+
+private:
     int mId; // used for equality operator
     bool mRemovable = false;
+    Vector2 mDirection;
+    float mSpeed;
     int mDamage;
-    int mHealth;
     int mMaxHealth;
+    int mHealth;
+    lua_State *mLuaState;
+    std::unique_ptr<EnemyBehaviour> mBehaviour;
     
-private:
     static int GetId()
     {
         static int sId = 0;
