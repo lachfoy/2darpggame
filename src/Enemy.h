@@ -1,40 +1,41 @@
 #ifndef ENEMY_H_
 #define ENEMY_H_
 
-#include "Actor.h"
+#include "Sprite.h"
 
-#include "Map.h"
+#include "Vector2.h"
+#include <glad/glad.h>
+#include "Renderer.h"
 #include "Player.h"
-#include <list>
-#include <memory>
 
-class Enemy;
-typedef std::unique_ptr<Enemy> EnemyPtr;
-
-class Enemy : public Actor
+class Enemy : public Sprite
 {
 public:
-    Enemy(int x, int y, const char* enemyScript); // should be just x and y, and some kind of data
+    Enemy(Vector2 position, const char* enemyScript); // should be just x and y, and some kind of data
     ~Enemy();
 
     bool operator !=(const Enemy& Enemy) const { return (mId != Enemy.Id()); }
 
     // getters
     int Id() const { return mId; }
-
     bool Removable() const { return mRemovable; } // removable???
+    int Damage() const { return 20; }
 
     // setters
     // ..
 
     // methods
-    void OnDeath() override;
-    void Update(Map& map, Player& player, std::list<EnemyPtr>& otherEnemies);
+    void TakeDamage(int damage);
+    void Heal(int amount);
+    void Update(Player& player);
+    void DrawHealthbar(Renderer& renderer);
 
 protected:
     int mId; // used for equality operator
-    bool mRemovable = false; // assume this starts false
+    bool mRemovable = false;
     int mDamage;
+    int mHealth;
+    int mMaxHealth;
     
 private:
     static int GetId()

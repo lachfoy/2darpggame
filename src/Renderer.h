@@ -31,7 +31,7 @@ public:
     void InitTextData();
     void LoadFont(const char* font, unsigned int fontSize);
 
-    void DrawSprite(int x, int y, GLuint texture);
+    void DrawSprite(float x, float y, GLuint texture);
     void DrawMap(GLuint texture);
     void DrawText(float x, float y, std::string text);
 

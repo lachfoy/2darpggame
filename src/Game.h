@@ -27,6 +27,7 @@ extern "C"
 #include "Map.h"
 #include "Player.h"
 #include "TextureManager.h"
+#include "Vector2.h"
 
 #include <random>
 

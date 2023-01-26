@@ -1,13 +1,12 @@
 #include "Sprite.h"
 
-Sprite::Sprite(int x, int y, GLuint texture)
+Sprite::Sprite(Vector2 position, GLuint texture)
 {
-    mPosX = x;
-    mPosY = y;
+    mPosition = position;
     mTexture = texture;
 }
 
 void Sprite::Draw(Renderer& renderer)
 {
-    renderer.DrawSprite(mPosX, mPosY, mTexture);
+    renderer.DrawSprite(mPosition.x, mPosition.y, mTexture);
 }

@@ -1,8 +1,9 @@
 #ifndef ENEMY_MANAGER_H_
 #define ENEMY_MANAGER_H_
 
-#include <glm/glm.hpp>
 #include <list>
+#include "Vector2.h"
+#include <glad/glad.h>
 #include "Renderer.h"
 #include "Enemy.h"
 #include <memory>
@@ -22,10 +23,12 @@ public:
 
     ~EnemyManager();
 
+    // getters
     const std::list<EnemyPtr>& Enemies() const { return mEnemies; }
 
-    void CreateEnemy(int x, int y, const char* enemyScript);
-    void UpdateEnemies(Map& map, Player& player);
+    // methods
+    void CreateEnemy(Vector2 position, const char* enemyScript);
+    void UpdateEnemies(float deltaTime);
     void HousekeepEnemies();
     void DrawEnemies(Renderer& renderer);
     void DrawEnemyHealthbars(Renderer& renderer);

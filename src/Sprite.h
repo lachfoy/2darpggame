@@ -1,29 +1,28 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
-#include <glm/glm.hpp>
+#include "Vector2.h"
+#include <glad/glad.h>
 #include "Renderer.h"
 
 class Sprite
 {
 public:
-    Sprite(int x, int y, GLuint texture);
+    Sprite() = default;
+    Sprite(Vector2 position, GLuint texture);
     ~Sprite() {}
 
     // getters
-    int PosX() const { return mPosX; }
-    int PosY() const { return mPosY; }
+    Vector2 Position() const { return mPosition; }
 
     // setters
-    void SetPosX(int posX) { mPosX = posX; } 
-    void SetPosY(int posY) { mPosY = posY; } 
+    void SetPosition(Vector2 position) { mPosition = position; } 
 
     // methods
     void Draw(Renderer& renderer);
 
 protected:
-    int mPosX;
-    int mPosY;
+    Vector2 mPosition;
     GLuint mTexture;
 
 };

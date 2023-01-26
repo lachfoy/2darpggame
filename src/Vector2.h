@@ -8,14 +8,17 @@ struct Vector2
 
     // operator overloads
     inline void operator+(const Vector2& rhs) { x += rhs.x; y += rhs.y; }
+    inline void operator+(const float rhs) { x += rhs; y += rhs; }
     inline void operator-(const Vector2& rhs) { x -= rhs.x; y -= rhs.y; }
     inline void operator*(const Vector2& rhs) { x *= rhs.x; y *= rhs.y; }
+    inline void operator*(const float rhs) { x *= rhs; y *= rhs; }
     inline void operator/(const Vector2& rhs) { x /= rhs.x; y /= rhs.y; }
     inline bool operator==(const Vector2& rhs) { return x == rhs.x && y == rhs.y; }
     inline bool operator!=(const Vector2& rhs) { return !(x == rhs.x && y == rhs.y); }
 
     // getters
     float Length();
+    static Vector2 Zero() { return Vector2(0.0f, 0.0f); }
 
     // methods
     void Normalize();

@@ -8,18 +8,16 @@ EnemyManager::~EnemyManager()
     mEnemies.clear();
 }
 
-void EnemyManager::CreateEnemy(int x, int y, const char* enemyScript)
+void EnemyManager::CreateEnemy(Vector2 position, const char* enemyScript)
 {
     std::cout << "EnemyManager:: Creating new enemy\n";
-    mEnemies.push_back(EnemyPtr(new Enemy(x, y, enemyScript)));
+    mEnemies.push_back(EnemyPtr(new Enemy(position, enemyScript)));
 }
 
-void EnemyManager::UpdateEnemies(Map& map, Player& player)
+void EnemyManager::UpdateEnemies(float deltaTime)
 {
-    player.Hi();
-
     for (const auto& enemy : mEnemies) {
-        enemy->Update(map, player, mEnemies);
+        //enemy->Update(map, player, mEnemies);
     }
 }
 

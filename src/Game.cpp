@@ -121,7 +121,7 @@ void Game::Create()
     // test map generator
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
-    mPlayer = new Player(1.0f, 1.0f, TextureManager::Instance().GetTexture("images/test.png"));
+    mPlayer = new Player(Vector2(3.0f, 3.0f), TextureManager::Instance().GetTexture("images/test.png"));
 
     // open lua
     L = luaL_newstate();
@@ -150,28 +150,32 @@ void Game::Create()
 void Game::Update(float deltaTime)
 {
     // player movement
-    if (mInput.IsKeyPressed(SDL_SCANCODE_W) || mInput.IsKeyPressed(SDL_SCANCODE_UP)) {
-        mPlayer->MoveUp(*mMap);
+    mPlayer->SetDirectionX(0.0f);
+    mPlayer->SetDirectionY(0.0f);
+    if (mInput.IsKeyHeld(SDL_SCANCODE_W) || mInput.IsKeyHeld(SDL_SCANCODE_UP)) {
+        mPlayer->SetDirectionY(-1.0f);
     }
-    if (mInput.IsKeyPressed(SDL_SCANCODE_A) || mInput.IsKeyPressed(SDL_SCANCODE_LEFT)) {
-        mPlayer->MoveLeft(*mMap);
+    if (mInput.IsKeyHeld(SDL_SCANCODE_A) || mInput.IsKeyHeld(SDL_SCANCODE_LEFT)) {
+        mPlayer->SetDirectionX(-1.0f);
     }
-    if (mInput.IsKeyPressed(SDL_SCANCODE_S) || mInput.IsKeyPressed(SDL_SCANCODE_DOWN)) {
-        mPlayer->MoveDown(*mMap);
+    if (mInput.IsKeyHeld(SDL_SCANCODE_S) || mInput.IsKeyHeld(SDL_SCANCODE_DOWN)) {
+        mPlayer->SetDirectionY(1.0f);
     }
-    if (mInput.IsKeyPressed(SDL_SCANCODE_D) || mInput.IsKeyPressed(SDL_SCANCODE_RIGHT)) {
-        mPlayer->MoveRight(*mMap);
+    if (mInput.IsKeyHeld(SDL_SCANCODE_D) || mInput.IsKeyHeld(SDL_SCANCODE_RIGHT)) {
+        mPlayer->SetDirectionX(1.0f);
     }
     if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
         mPlayer->TakeDamage(10);
     }
 
-    mRenderer.SetCameraPosition(mPlayer->PosX() + 0.5f, mPlayer->PosY() + 0.5f);
+    mPlayer->Update(deltaTime);
 
-    EnemyManager::Instance().UpdateEnemies(*mMap, *mPlayer);
+    mRenderer.SetCameraPosition(mPlayer->Position().x, mPlayer->Position().y);
+
+    //EnemyManager::Instance().UpdateEnemies(*mMap, *mPlayer);
 
     // "housekeeping"
-    EnemyManager::Instance().HousekeepEnemies();
+    //EnemyManager::Instance().HousekeepEnemies();
 
 }
 
@@ -180,11 +184,10 @@ void Game::Draw()
     glClear(GL_COLOR_BUFFER_BIT);
     mMap->DrawMap(mRenderer);   
 
-    EnemyManager::Instance().DrawEnemies(mRenderer);
-    EnemyManager::Instance().DrawEnemyHealthbars(mRenderer);
+    // EnemyManager::Instance().DrawEnemies(mRenderer);
+    // EnemyManager::Instance().DrawEnemyHealthbars(mRenderer);
 
     mPlayer->Draw(mRenderer);
-    mPlayer->DrawHealthbar(mRenderer);
 
     mRenderer.DrawText(400, 300, "Hello world");
 

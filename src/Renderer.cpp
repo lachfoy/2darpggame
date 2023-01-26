@@ -308,7 +308,7 @@ void Renderer::LoadFont(const char* font, unsigned int fontSize)
     FT_Done_FreeType(library);
 }
 
-void Renderer::DrawSprite(int x, int y, GLuint texture)
+void Renderer::DrawSprite(float x, float y, GLuint texture)
 {
     glUseProgram(mShader);
 

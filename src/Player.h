@@ -1,26 +1,35 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include "Actor.h"
+#include "Sprite.h"
+
+#include "Vector2.h"
 #include <glad/glad.h>
 #include "Renderer.h"
-#include "Map.h"
 
-class Player : public Actor
+class Player : public Sprite
 {
 public:
-    Player(int x, int y, GLuint texture);
+    Player(Vector2 position, GLuint texture);
 
-    int GetDamage() const { return 20; }
+    // getters
+    int Damage() const { return 20; }
+
+    // setters
+    void SetDirectionX(float directionX) { mDirection.x = directionX; }
+    void SetDirectionY(float directionY) { mDirection.y = directionY; }
 
     // methods
-    void OnDeath() override {} // do nothing atm
-    void Update();
-
-    void Hi() { std::cout << "hey!!!\n"; }
+    void TakeDamage(int damage);
+    void Heal(int amount);
+    void Update(float deltaTime);
+    void DrawHealthbar(Renderer& renderer);
 
 private:
-
+    Vector2 mDirection;
+    float mSpeed;
+    int mHealth;
+    int mMaxHealth;
 
 };
 
