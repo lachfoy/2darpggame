@@ -166,6 +166,7 @@ void Game::Update(float deltaTime)
     }
     if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
         mPlayer->TakeDamage(10);
+        std::cout << "position: " << mPlayer->Position().x << ", " << mPlayer->Position().y << "\n";
     }
 
     mPlayer->Update(deltaTime);

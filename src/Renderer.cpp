@@ -319,12 +319,12 @@ void Renderer::DrawSprite(float x, float y, GLuint texture)
     // set up model matrix
     glm::mat4 model = glm::mat4(1.f);
     model = glm::translate(model, glm::vec3(x * mTileSize, y * mTileSize, 0.f));
-    model = glm::scale(model, glm::vec3(mTileSize, mTileSize, 1.f)); 
+    model = glm::translate(model, glm::vec3(-0.5f * mTileSize, -0.5f * mTileSize, 0.0f));
+    model = glm::scale(model, glm::vec3(mTileSize, mTileSize, 1.f));
 
     // set uniforms
     glUniformMatrix4fv(glGetUniformLocation(mShader, "model"), 1, false, glm::value_ptr(model));
     glUniform4f(glGetUniformLocation(mShader, "color"), 1.f, 1.f, 1.f, 1.f);
-
     
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
