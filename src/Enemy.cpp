@@ -20,6 +20,9 @@ extern "C"
 
 #include "TextureManager.h"
 
+MoveEnemyState Enemy::mMoveEnemyState = {};
+IdleEnemyState Enemy::mIdleEnemyState = {};
+
 Enemy::Enemy(Vector2 position, const char* enemyScript)
 {
     mPosition = position;
@@ -48,7 +51,7 @@ Enemy::Enemy(Vector2 position, const char* enemyScript)
     mMaxHealth = lua_tonumber(mLuaState, -1);
     mHealth = mMaxHealth;
 
-    mState = std::unique_ptr<EnemyState>(new WalkRandomly(1.0f));
+    mState = std::unique_ptr<EnemyState>(&mMoveEnemyState);
 
     mId = GetId();
 }
@@ -77,15 +80,6 @@ void Enemy::Heal(int amount)
     }
 }
 
-void Enemy::Move(float deltaTime)
-{
-    if (mDirection != Vector2::Zero()) {
-        mDirection.Normalize();
-        mPosition.x += mDirection.x * mSpeed * deltaTime;
-        mPosition.y += mDirection.y * mSpeed * deltaTime;
-    }
-}
-
 void Enemy::Update(float deltaTime)
 {
     if (!mState) return;
@@ -106,7 +100,7 @@ int Enemy::MoveTo(lua_State* L)
     float timeToComplete = lua_tonumber(L, 4);
 
     std::cout << "Enemy move\n";
-    enemy->mBehaviour.reset(new MoveToEnemyBehaviour(enemy, Vector2(endPositionX, endPositionY), timeToComplete)); // replace the old behaviour with a new behaviour
+    //enemy->mBehaviour.reset(new MoveToEnemyBehaviour(enemy, Vector2(endPositionX, endPositionY), timeToComplete)); // replace the old behaviour with a new behaviour
 
     return 0;
 }

@@ -32,14 +32,14 @@ class EnemyState;
 class Enemy : public Sprite
 {
 public:
-    Enemy(Vector2 position, const char* enemyScript); // should be just x and y, and some kind of data
+    Enemy(Vector2 position, const char* enemyScript);
     ~Enemy();
 
     bool operator !=(const Enemy& Enemy) const { return (mId != Enemy.Id()); }
 
     // getters
     int Id() const { return mId; }
-    bool Removable() const { return mRemovable; } // removable???
+    bool Removable() const { return mRemovable; }
     int Damage() const { return 20; }
 
     // setters
@@ -48,7 +48,6 @@ public:
     // methods
     void TakeDamage(int damage);
     void Heal(int amount);
-    void Move(float deltaTime);
     void Update(float deltaTime);
     void DrawHealthbar(Renderer& renderer);
 
@@ -57,6 +56,12 @@ public:
     static int Wait(lua_State* L);
 
 private:
+    static int GetId()
+    {
+        static int sId = 0;
+        return sId++;
+    }
+
     int mId; // used for equality operator
     bool mRemovable = false;
     Vector2 mDirection;
@@ -65,14 +70,10 @@ private:
     int mMaxHealth;
     int mHealth;
     lua_State *mLuaState;
-    std::unique_ptr<EnemyBehaviour> mBehaviour;
     std::unique_ptr<EnemyState> mState;
-    
-    static int GetId()
-    {
-        static int sId = 0;
-        return sId++;
-    }
+    static MoveEnemyState mMoveEnemyState;
+    static IdleEnemyState mIdleEnemyState;
+    friend class MoveEnemyState;
 
 };
 

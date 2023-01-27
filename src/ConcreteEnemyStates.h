@@ -3,39 +3,21 @@
 
 #include "EnemyState.h"
 
-#include "Player.h"
-
-class FollowPlayer : public EnemyState
+class MoveEnemyState : public EnemyState
 {
 public:
-    FollowPlayer(Player* player);
+    MoveEnemyState();
 
-    void Update(Enemy& enemy, float deltaTime) override;
-
-private:
-    Player* mPlayer;
+    void Update(Enemy& enemy, float deltaTime);
 
 };
 
-class DoNothing : public EnemyState
+class IdleEnemyState : public EnemyState
 {
 public:
-    DoNothing();
+    IdleEnemyState();
 
-    void Update(Enemy& enemy, float deltaTime) override;
-
-};
-
-class WalkRandomly : public EnemyState
-{
-public:
-    WalkRandomly(float changeDirectionTime);
-
-    void Update(Enemy& enemy, float deltaTime) override;
-
-private:
-    float mChangeDirectionTime;
-    float mTimer;
+    void Update(Enemy& enemy, float deltaTime);
 
 };
 

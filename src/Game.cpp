@@ -165,6 +165,12 @@ void Game::Update(float deltaTime)
     mRenderer.SetCameraPosition(mPlayer->Position().x, mPlayer->Position().y);
 
     EnemyManager::Instance().UpdateEnemies(deltaTime);
+    
+    for (const auto& enemy : EnemyManager::Instance().Enemies()) {
+        Vector2 direction = mPlayer->Position() - enemy->Position();
+        direction.Normalize();
+        enemy->SetDirection(direction);
+    } 
 
     // "housekeeping"
     EnemyManager::Instance().HousekeepEnemies();
