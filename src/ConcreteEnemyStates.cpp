@@ -4,42 +4,44 @@
 #include "Vector2.h"
 #include "Random.h"
 
-FollowPlayer::FollowPlayer(Enemy* enemy, Player* player) : EnemyState(enemy)
+FollowPlayer::FollowPlayer(Player* player)
 {
     mPlayer = player;
 }
 
-void FollowPlayer::Update(float deltaTime)
+void FollowPlayer::Update(Enemy& enemy, float deltaTime)
 {
-    Vector2 direction = mEnemy->Position() - mPlayer->Position();
+    Vector2 direction = enemy.Position() - mPlayer->Position();
     direction.Normalize();
-    mEnemy->SetDirection(direction);
+    enemy.SetDirection(direction);
+    enemy.Move(deltaTime);
 }
 
-DoNothing::DoNothing(Enemy* enemy) : EnemyState(enemy)
+DoNothing::DoNothing()
 {
-    mEnemy->SetDirection(Vector2::Zero());
 }
 
-void DoNothing::Update(float deltaTime)
+void DoNothing::Update(Enemy& enemy, float deltaTime)
 {
     return;
 }
 
-WalkRandomly::WalkRandomly(Enemy* enemy, float changeDirectionTime) : EnemyState(enemy)
+WalkRandomly::WalkRandomly(float changeDirectionTime)
 {
     mChangeDirectionTime = changeDirectionTime;
-    mTimer = 0.0f;
+    mTimer = changeDirectionTime;
 }
 
-void WalkRandomly::Update(float deltaTime)
+void WalkRandomly::Update(Enemy& enemy, float deltaTime)
 {
     if (mTimer >= mChangeDirectionTime) {
         Vector2 randomDirection = Vector2(gRandom.Range(-10, 10) / 10.0f, gRandom.Range(-10, 10) / 10.0f);
         randomDirection.Normalize();
-        mEnemy->SetDirection(randomDirection);
+        enemy.SetDirection(randomDirection);
         mTimer = 0.0f;
     } else {
         mTimer += deltaTime;
     }
+
+    enemy.Move(deltaTime);
 }

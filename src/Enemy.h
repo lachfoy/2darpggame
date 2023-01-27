@@ -25,6 +25,9 @@ extern "C"
 #include "Player.h"
 #include "EnemyBehaviours.h"
 #include <memory>
+#include "ConcreteEnemyStates.h"
+
+class EnemyState;
 
 class Enemy : public Sprite
 {
@@ -45,6 +48,7 @@ public:
     // methods
     void TakeDamage(int damage);
     void Heal(int amount);
+    void Move(float deltaTime);
     void Update(float deltaTime);
     void DrawHealthbar(Renderer& renderer);
 
@@ -62,6 +66,7 @@ private:
     int mHealth;
     lua_State *mLuaState;
     std::unique_ptr<EnemyBehaviour> mBehaviour;
+    std::unique_ptr<EnemyState> mState;
     
     static int GetId()
     {

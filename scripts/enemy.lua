@@ -1,5 +1,5 @@
 texture = "images/enemy.png"
-speed = 10
+speed = 1.0
 damage = 10
 max_health = 50
 
@@ -15,6 +15,8 @@ enemy_behaviour = coroutine.create(function (enemy)
         actions[math.random(#actions)]()
         coroutine.yield()
     end
+
+
 end)
 
 function start_next_behaviour(enemy)

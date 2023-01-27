@@ -48,6 +48,8 @@ Enemy::Enemy(Vector2 position, const char* enemyScript)
     mMaxHealth = lua_tonumber(mLuaState, -1);
     mHealth = mMaxHealth;
 
+    mState = std::unique_ptr<EnemyState>(new WalkRandomly(1.0f));
+
     mId = GetId();
 }
 
@@ -75,17 +77,19 @@ void Enemy::Heal(int amount)
     }
 }
 
-void Enemy::Update(float deltaTime)
+void Enemy::Move(float deltaTime)
 {
-    if (!mEnemyState) return;
-
-    mEnemyState->Update(deltaTime);
-
     if (mDirection != Vector2::Zero()) {
         mDirection.Normalize();
         mPosition.x += mDirection.x * mSpeed * deltaTime;
         mPosition.y += mDirection.y * mSpeed * deltaTime;
     }
+}
+
+void Enemy::Update(float deltaTime)
+{
+    if (!mState) return;
+    mState->Update(*this, deltaTime);
 }
 
 void Enemy::DrawHealthbar(Renderer& renderer)

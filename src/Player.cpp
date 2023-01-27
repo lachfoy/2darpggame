@@ -2,7 +2,7 @@
 
 Player::Player(Vector2 position, GLuint texture) : Sprite(position, texture)
 {
-    mSpeed = 10.0f;
+    mSpeed = 3.0f;
     mMaxHealth = 100;
     mHealth = mMaxHealth;
 }
