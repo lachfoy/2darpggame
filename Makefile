@@ -12,6 +12,7 @@ OBJECTS := glad.o\
 	Sprite.o\
 	Player.o\
 	EnemyBehaviours.o\
+	EnemyState.o\
 	ConcreteEnemyStates.o\
 	Enemy.o\
 	EnemyManager.o\

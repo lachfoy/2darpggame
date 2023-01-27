@@ -20,9 +20,6 @@ extern "C"
 
 #include "TextureManager.h"
 
-MoveEnemyState Enemy::mMoveEnemyState = {};
-IdleEnemyState Enemy::mIdleEnemyState = {};
-
 Enemy::Enemy(Vector2 position, const char* enemyScript)
 {
     mPosition = position;
@@ -51,7 +48,7 @@ Enemy::Enemy(Vector2 position, const char* enemyScript)
     mMaxHealth = lua_tonumber(mLuaState, -1);
     mHealth = mMaxHealth;
 
-    mState = std::unique_ptr<EnemyState>(&mMoveEnemyState);
+    mState = &EnemyState::idleEnemyState;
 
     mId = GetId();
 }
@@ -59,6 +56,12 @@ Enemy::Enemy(Vector2 position, const char* enemyScript)
 Enemy::~Enemy()
 {
     lua_close(mLuaState);
+}
+
+void Enemy::CheckPlayerInRange(Player& player)
+{
+    std::cout << (player.Position() - mPosition).Length() << std::endl;
+    mIsPlayerInRange = true ? (player.Position() - mPosition).Length() <= mRange : false;
 }
 
 void Enemy::TakeDamage(int damage)

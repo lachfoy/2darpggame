@@ -44,8 +44,10 @@ public:
 
     // setters
     void SetDirection(Vector2 direction) { mDirection = direction; }
-
+    void SetState(EnemyState& enemyState) { mState = &enemyState; }
+    
     // methods
+    void CheckPlayerInRange(Player& player);
     void TakeDamage(int damage);
     void Heal(int amount);
     void Update(float deltaTime);
@@ -70,10 +72,11 @@ private:
     int mMaxHealth;
     int mHealth;
     lua_State *mLuaState;
-    std::unique_ptr<EnemyState> mState;
-    static MoveEnemyState mMoveEnemyState;
-    static IdleEnemyState mIdleEnemyState;
+    EnemyState* mState;
     friend class MoveEnemyState;
+    friend class IdleEnemyState;
+    float mRange = 3.0f;
+    bool mIsPlayerInRange;
 
 };
 

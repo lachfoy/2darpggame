@@ -3,7 +3,7 @@
 #include "Enemy.h"
 #include "Vector2.h"
 
-MoveEnemyState::MoveEnemyState(){}
+MoveEnemyState::MoveEnemyState() {}
 
 void MoveEnemyState::Update(Enemy& enemy, float deltaTime)
 {
@@ -14,9 +14,18 @@ void MoveEnemyState::Update(Enemy& enemy, float deltaTime)
     }
 }
 
-IdleEnemyState::IdleEnemyState(){}
+IdleEnemyState::IdleEnemyState() {}
 
 void IdleEnemyState::Update(Enemy& enemy, float deltaTime)
+{
+    if (enemy.mIsPlayerInRange) {
+        enemy.SetState(moveEnemyState);
+    }
+}
+
+HurtEnemyState::HurtEnemyState() {}
+
+void HurtEnemyState::Update(Enemy& enemy, float deltaTime)
 {
     return;
 }

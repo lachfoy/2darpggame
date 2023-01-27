@@ -21,4 +21,16 @@ public:
 
 };
 
+class HurtEnemyState : public EnemyState
+{
+public:
+    HurtEnemyState();
+
+    void Update(Enemy& enemy, float deltaTime);
+
+private:
+    float mTimer;
+
+};
+
 #endif

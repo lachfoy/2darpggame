@@ -167,6 +167,7 @@ void Game::Update(float deltaTime)
     EnemyManager::Instance().UpdateEnemies(deltaTime);
     
     for (const auto& enemy : EnemyManager::Instance().Enemies()) {
+        enemy->CheckPlayerInRange(*mPlayer);
         Vector2 direction = mPlayer->Position() - enemy->Position();
         direction.Normalize();
         enemy->SetDirection(direction);
