@@ -30,23 +30,21 @@ Enemy::Enemy(Vector2 position, const char* enemyScript)
 
     lua_register(mLuaState, "MoveTo", MoveTo); // expose api function to lua
 
+    // run the lua file
     if (luaL_dofile(mLuaState, enemyScript) != 0) {
-        // abort, idk. todo: error checking, put the program back into a safe state
-        std::cout << lua_tostring(mLuaState, -1) << std::endl; // error at top of stack
+        std::cout << lua_tostring(mLuaState, -1) << "\n"; // error at top of stack
     }
 
+    // query values 
     lua_getglobal(mLuaState, "texture");
     lua_getglobal(mLuaState, "speed");
     lua_getglobal(mLuaState, "damage");
     lua_getglobal(mLuaState, "max_health");
 
-    // get texture
+    // get values from the stack
     mTexture = TextureManager::Instance().GetTexture(lua_tostring(mLuaState, -4));
-
     mSpeed = lua_tonumber(mLuaState, -3);
     mDamage = lua_tonumber(mLuaState, -2);
-
-    // get max health value
     mMaxHealth = lua_tonumber(mLuaState, -1);
     mHealth = mMaxHealth;
 
@@ -79,20 +77,14 @@ void Enemy::Heal(int amount)
 
 void Enemy::Update(float deltaTime)
 {
-    if (!mBehaviour) return;
+    if (!mEnemyState) return;
 
-    // update behaviour
-    if (mBehaviour->Update(deltaTime)) {
-        // call to lua to resume coroutine and issue a new behaviour
-        lua_getglobal(mLuaState, "start_next_behaviour"); // get function from lua script, i.e. push it onto lua stack
-        if (lua_isfunction(mLuaState, -1)) {
-            lua_pushlightuserdata(mLuaState, this); // push "enemy" object pointer to lua
+    mEnemyState->Update(deltaTime);
 
-            // call the function
-            if (lua_pcall(mLuaState, 1, 0, 0) != 0) {
-                std::cout << lua_tostring(mLuaState, -1) << std::endl; // error
-            }
-        }
+    if (mDirection != Vector2::Zero()) {
+        mDirection.Normalize();
+        mPosition.x += mDirection.x * mSpeed * deltaTime;
+        mPosition.y += mDirection.y * mSpeed * deltaTime;
     }
 }
 

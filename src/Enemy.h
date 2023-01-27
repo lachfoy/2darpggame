@@ -40,7 +40,7 @@ public:
     int Damage() const { return 20; }
 
     // setters
-    // ..
+    void SetDirection(Vector2 direction) { mDirection = direction; }
 
     // methods
     void TakeDamage(int damage);
