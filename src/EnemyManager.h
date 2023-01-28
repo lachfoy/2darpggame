@@ -27,7 +27,7 @@ public:
     const std::list<EnemyPtr>& Enemies() const { return mEnemies; }
 
     // methods
-    void CreateEnemy(Vector2 position, const char* enemyScript);
+    void CreateEnemy(Vector2 position, Player* player, const char* enemyScript);
     void UpdateEnemies(float deltaTime);
     void HousekeepEnemies();
     void DrawEnemies(Renderer& renderer);

@@ -20,9 +20,10 @@ extern "C"
 
 #include "TextureManager.h"
 
-Enemy::Enemy(Vector2 position, const char* enemyScript)
+Enemy::Enemy(Vector2 position, Player* player, const char* enemyScript)
 {
     mPosition = position;
+    mPlayer = player;
 
     // open Lua file
     mLuaState = luaL_newstate();
@@ -48,7 +49,11 @@ Enemy::Enemy(Vector2 position, const char* enemyScript)
     mMaxHealth = lua_tonumber(mLuaState, -1);
     mHealth = mMaxHealth;
 
-    mState = &EnemyState::idleEnemyState;
+    mState = EnemyState::STATE_IDLE;
+    std::cout << "state: " << (int)mState << std::endl;
+
+    mRange = 4.0f;
+    mIsPlayerInRange = false;
 
     mId = GetId();
 }
@@ -58,10 +63,11 @@ Enemy::~Enemy()
     lua_close(mLuaState);
 }
 
-void Enemy::CheckPlayerInRange(Player& player)
+void Enemy::CheckPlayerInRange()
 {
-    std::cout << (player.Position() - mPosition).Length() << std::endl;
-    mIsPlayerInRange = true ? (player.Position() - mPosition).Length() <= mRange : false;
+    if (!mPlayer) return;
+    std::cout << (mPlayer->Position() - mPosition).Length() << std::endl;
+    mIsPlayerInRange = true ? (mPlayer->Position() - mPosition).Length() <= mRange : false;
 }
 
 void Enemy::TakeDamage(int damage)
@@ -85,8 +91,20 @@ void Enemy::Heal(int amount)
 
 void Enemy::Update(float deltaTime)
 {
-    if (!mState) return;
-    mState->Update(*this, deltaTime);
+    switch(mState) {
+    case EnemyState::STATE_IDLE:
+        if (mIsPlayerInRange) {
+            mState = EnemyState::STATE_MOVE;
+        }
+        break;
+    case EnemyState::STATE_MOVE:
+        // move towards player
+        Vector2 direction = mPlayer->Position() - mPosition;
+        direction.Normalize();
+        mVelocity = direction * mSpeed;
+        mPosition += mVelocity * deltaTime;
+        break;
+    }
 }
 
 void Enemy::DrawHealthbar(Renderer& renderer)

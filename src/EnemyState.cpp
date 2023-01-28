@@ -1,6 +1,6 @@
 #include "EnemyState.h"
 
-#include "ConcreteEnemyStates.h"
+// #include "ConcreteEnemyStates.h"
 
-MoveEnemyState EnemyState::moveEnemyState = {};
-IdleEnemyState EnemyState::idleEnemyState = {};
+// MoveEnemyState EnemyState::moveEnemyState = {};
+// IdleEnemyState EnemyState::idleEnemyState = {};

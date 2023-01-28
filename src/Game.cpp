@@ -122,9 +122,11 @@ void Game::Create()
     // test map generator
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
+    // spawn player
     mPlayer = new Player(Vector2(10.0f, 10.0f), TextureManager::Instance().GetTexture("images/test.png"));
 
-    EnemyManager::Instance().CreateEnemy(Vector2(15.0f, 15.0f), "scripts/enemy.lua");
+    // spawn enemy
+    EnemyManager::Instance().CreateEnemy(Vector2(15.0f, 15.0f), mPlayer, "scripts/enemy.lua");
 
     // open lua
     L = luaL_newstate();
@@ -167,10 +169,7 @@ void Game::Update(float deltaTime)
     EnemyManager::Instance().UpdateEnemies(deltaTime);
     
     for (const auto& enemy : EnemyManager::Instance().Enemies()) {
-        enemy->CheckPlayerInRange(*mPlayer);
-        Vector2 direction = mPlayer->Position() - enemy->Position();
-        direction.Normalize();
-        enemy->SetDirection(direction);
+        enemy->CheckPlayerInRange();
     } 
 
     // "housekeeping"

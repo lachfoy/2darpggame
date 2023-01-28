@@ -8,10 +8,10 @@ EnemyManager::~EnemyManager()
     mEnemies.clear();
 }
 
-void EnemyManager::CreateEnemy(Vector2 position, const char* enemyScript)
+void EnemyManager::CreateEnemy(Vector2 position, Player* player, const char* enemyScript)
 {
     std::cout << "EnemyManager:: Creating new enemy\n";
-    mEnemies.push_back(EnemyPtr(new Enemy(position, enemyScript)));
+    mEnemies.push_back(EnemyPtr(new Enemy(position, player, enemyScript)));
 }
 
 void EnemyManager::UpdateEnemies(float deltaTime)

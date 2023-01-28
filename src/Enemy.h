@@ -27,12 +27,13 @@ extern "C"
 #include <memory>
 #include "ConcreteEnemyStates.h"
 
-class EnemyState;
+#include "EnemyState.h"
+//class EnemyState;
 
 class Enemy : public Sprite
 {
 public:
-    Enemy(Vector2 position, const char* enemyScript);
+    Enemy(Vector2 position, Player* player, const char* enemyScript);
     ~Enemy();
 
     bool operator !=(const Enemy& Enemy) const { return (mId != Enemy.Id()); }
@@ -40,14 +41,14 @@ public:
     // getters
     int Id() const { return mId; }
     bool Removable() const { return mRemovable; }
-    int Damage() const { return 20; }
+    int Damage() const { return mDamage; }
 
     // setters
-    void SetDirection(Vector2 direction) { mDirection = direction; }
-    void SetState(EnemyState& enemyState) { mState = &enemyState; }
+    void SetVelocity(Vector2 velocity) { mVelocity = velocity; }
+    void SetState(EnemyState enemyState) { mState = enemyState; }
     
     // methods
-    void CheckPlayerInRange(Player& player);
+    void CheckPlayerInRange();
     void TakeDamage(int damage);
     void Heal(int amount);
     void Update(float deltaTime);
@@ -66,17 +67,20 @@ private:
 
     int mId; // used for equality operator
     bool mRemovable = false;
-    Vector2 mDirection;
+    Vector2 mVelocity;
     float mSpeed;
     int mDamage;
     int mMaxHealth;
     int mHealth;
-    lua_State *mLuaState;
-    EnemyState* mState;
-    friend class MoveEnemyState;
-    friend class IdleEnemyState;
-    float mRange = 3.0f;
+    lua_State* mLuaState;
+    //EnemyState* mState;
+    //friend class MoveEnemyState;
+    //friend class IdleEnemyState;
+    EnemyState mState;
+    float mRange;
     bool mIsPlayerInRange;
+    float mColliderRadius;
+    Player* mPlayer;
 
 };
 

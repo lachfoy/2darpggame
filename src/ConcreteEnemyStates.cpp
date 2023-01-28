@@ -1,31 +1,31 @@
 #include "ConcreteEnemyStates.h"
 
-#include "Enemy.h"
-#include "Vector2.h"
+// #include "Enemy.h"
+// #include "Vector2.h"
 
-MoveEnemyState::MoveEnemyState() {}
+// MoveEnemyState::MoveEnemyState() {}
 
-void MoveEnemyState::Update(Enemy& enemy, float deltaTime)
-{
-    if (enemy.mDirection != Vector2::Zero()) {
-        enemy.mDirection.Normalize();
-        enemy.mPosition.x += enemy.mDirection.x * enemy.mSpeed * deltaTime;
-        enemy.mPosition.y += enemy.mDirection.y * enemy.mSpeed * deltaTime;
-    }
-}
+// void MoveEnemyState::Update(Enemy& enemy, float deltaTime)
+// {
+//     if (enemy.mDirection != Vector2::Zero()) {
+//         enemy.mDirection.Normalize();
+//         enemy.mPosition.x += enemy.mDirection.x * enemy.mSpeed * deltaTime;
+//         enemy.mPosition.y += enemy.mDirection.y * enemy.mSpeed * deltaTime;
+//     }
+// }
 
-IdleEnemyState::IdleEnemyState() {}
+// IdleEnemyState::IdleEnemyState() {}
 
-void IdleEnemyState::Update(Enemy& enemy, float deltaTime)
-{
-    if (enemy.mIsPlayerInRange) {
-        enemy.SetState(moveEnemyState);
-    }
-}
+// void IdleEnemyState::Update(Enemy& enemy, float deltaTime)
+// {
+//     if (enemy.mIsPlayerInRange) {
+//         enemy.SetState(moveEnemyState);
+//     }
+// }
 
-HurtEnemyState::HurtEnemyState() {}
+// HurtEnemyState::HurtEnemyState() {}
 
-void HurtEnemyState::Update(Enemy& enemy, float deltaTime)
-{
-    return;
-}
+// void HurtEnemyState::Update(Enemy& enemy, float deltaTime)
+// {
+//     return;
+// }
