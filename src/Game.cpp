@@ -166,6 +166,7 @@ void Game::Update(float deltaTime)
 
     EnemyManager::Instance().UpdateEnemies(deltaTime);
     
+    // temp hack
     for (const auto& enemy : EnemyManager::Instance().Enemies()) {
         enemy->CheckPlayerInRange();
     } 

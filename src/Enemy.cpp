@@ -53,6 +53,7 @@ Enemy::Enemy(Vector2 position, Player* player, const char* enemyScript)
     mState = EnemyState::STATE_IDLE;
 
     mRange = 4.0f;
+    mFriction = 20.0f;
 
     mId = GetId();
 }
@@ -100,8 +101,14 @@ void Enemy::Update(float deltaTime)
         // move towards player
         Vector2 direction = mPlayer->Position() - mPosition;
         direction.Normalize();
-        mVelocity = direction * mSpeed;
-        mPosition += mVelocity * deltaTime;
+
+        // apply speed and friction
+        mAcceleration = direction * mSpeed;
+        mAcceleration -= mVelocity * mFriction;
+
+        // calculate new position and velocity from acceleration
+        mPosition += mVelocity * deltaTime + mAcceleration * 0.5f * deltaTime * deltaTime;
+        mVelocity += mAcceleration * deltaTime;
         break;
     }
 }

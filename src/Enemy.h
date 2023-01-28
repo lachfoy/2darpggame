@@ -44,7 +44,6 @@ public:
     int Damage() const { return mDamage; }
 
     // setters
-    void SetVelocity(Vector2 velocity) { mVelocity = velocity; }
     void SetState(EnemyState enemyState) { mState = enemyState; }
     
     // methods
@@ -68,6 +67,8 @@ private:
     int mId; // used for equality operator
     bool mRemovable = false;
     Vector2 mVelocity;
+    Vector2 mAcceleration;
+    float mFriction;
     float mSpeed;
     int mDamage;
     int mMaxHealth;

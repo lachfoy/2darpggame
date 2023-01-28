@@ -2,10 +2,10 @@
 
 Player::Player(Vector2 position, GLuint texture) : Sprite(position, texture)
 {
-    mSpeed = 50.0f;
+    mSpeed = 100.0f;
     mMaxHealth = 100;
     mHealth = mMaxHealth;
-    mFriction = 10.0f;
+    mFriction = 20.0f;
 }
 
 void Player::TakeDamage(int damage)
