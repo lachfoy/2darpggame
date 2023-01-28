@@ -43,8 +43,6 @@ void Player::Update(float deltaTime)
 
     // reset acceleration
     mAcceleration = Vector2::Zero();
-
-    std::cout << "vel: " << mVelocity.x << ", " << mVelocity.y << "\n";
 }
 
 void Player::DrawHealthbar(Renderer& renderer)

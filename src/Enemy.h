@@ -47,6 +47,7 @@ public:
     void SetState(EnemyState enemyState) { mState = enemyState; }
     
     // methods
+    void AddVelocity(Vector2 velocity) { mVelocity = velocity; }
     void CheckPlayerInRange();
     void TakeDamage(int damage);
     void Heal(int amount);

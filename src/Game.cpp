@@ -156,8 +156,12 @@ void Game::Update(float deltaTime)
         mPlayer->SetAccelerationX(1.0f);
     }
     if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
-        mPlayer->TakeDamage(10);
-        std::cout << "position: " << mPlayer->Position().x << ", " << mPlayer->Position().y << "\n";
+        //mPlayer->TakeDamage(10);
+        Vector2 impulse = (EnemyManager::Instance().Enemies().front()->Position() - mPlayer->Position());
+        impulse.Normalize();
+        impulse *= 50.0f;
+        EnemyManager::Instance().Enemies().front()->AddVelocity(impulse);
+        //std::cout << "position: " << mPlayer->Position().x << ", " << mPlayer->Position().y << "\n";
     }
 
     mPlayer->Update(deltaTime);
@@ -166,7 +170,7 @@ void Game::Update(float deltaTime)
 
     EnemyManager::Instance().UpdateEnemies(deltaTime);
     
-    // temp hack
+    // temp hack - should be done elsewhere
     for (const auto& enemy : EnemyManager::Instance().Enemies()) {
         enemy->CheckPlayerInRange();
     } 

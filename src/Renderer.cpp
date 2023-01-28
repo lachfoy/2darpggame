@@ -153,9 +153,9 @@ void Renderer::InitMapData(int mapWidth, int mapHeight, uint8_t* tileData, int t
     for (int x = 0; x < mapWidth; x++) {
         for (int y = 0; y < mapHeight; y++) {
             uint8_t tile = tileData[x + mapWidth * y];
-            float tx0 = (tile & 15) * mTileTexSize;
-            float ty0 = (tile >> 4) * mTileTexSize;
-            float tySize = mTileTexSize;
+            float tx0 = (tile & 15) * mTileTexSize + mTileTexPadding;
+            float ty0 = (tile >> 4) * mTileTexSize + mTileTexPadding;
+            float tySize = mTileTexSize - mTileTexPadding * 2;
 
             // vertex 0 (top left)
             vertexData[i + 0] = x; // position x

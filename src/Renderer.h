@@ -61,6 +61,7 @@ private:
     int mTileMapLength;
     int mTileSize;
     const float mTileTexSize = 1 / 16.f; // always 16 tiles per row in tileset
+    const float mTileTexPadding = 1 / 256.0f;
 
     int mRenderWidth = 320;
     int mRenderHeight = 240;
