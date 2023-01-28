@@ -2,9 +2,10 @@
 
 Player::Player(Vector2 position, GLuint texture) : Sprite(position, texture)
 {
-    mSpeed = 3.0f;
+    mSpeed = 50.0f;
     mMaxHealth = 100;
     mHealth = mMaxHealth;
+    mFriction = 10.0f;
 }
 
 void Player::TakeDamage(int damage)
@@ -28,14 +29,25 @@ void Player::Heal(int amount)
 
 void Player::Update(float deltaTime)
 {
-    if (mDirection != Vector2::Zero()) {
-        mDirection.Normalize();
-        mPosition.x += mDirection.x * mSpeed * deltaTime;
-        mPosition.y += mDirection.y * mSpeed * deltaTime;
+    if (mAcceleration != Vector2::Zero()) {
+        mAcceleration.Normalize();
     }
+
+    // apply speed and friction
+    mAcceleration *= mSpeed;
+    mAcceleration -= mVelocity * mFriction;
+
+    // calculate new position and velocity from acceleration
+    mPosition += mVelocity * deltaTime + mAcceleration * 0.5f * deltaTime * deltaTime;
+    mVelocity += mAcceleration * deltaTime;
+
+    // reset acceleration
+    mAcceleration = Vector2::Zero();
+
+    std::cout << "vel: " << mVelocity.x << ", " << mVelocity.y << "\n";
 }
 
 void Player::DrawHealthbar(Renderer& renderer)
-{
+{ 
 
 }

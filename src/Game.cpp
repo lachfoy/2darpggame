@@ -143,19 +143,17 @@ void Game::Create()
 void Game::Update(float deltaTime)
 {
     // player movement
-    mPlayer->SetDirectionX(0.0f);
-    mPlayer->SetDirectionY(0.0f);
     if (mInput.IsKeyHeld(SDL_SCANCODE_W) || mInput.IsKeyHeld(SDL_SCANCODE_UP)) {
-        mPlayer->SetDirectionY(-1.0f);
+        mPlayer->SetAccelerationY(-1.0f);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_A) || mInput.IsKeyHeld(SDL_SCANCODE_LEFT)) {
-        mPlayer->SetDirectionX(-1.0f);
+        mPlayer->SetAccelerationX(-1.0f);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_S) || mInput.IsKeyHeld(SDL_SCANCODE_DOWN)) {
-        mPlayer->SetDirectionY(1.0f);
+        mPlayer->SetAccelerationY(1.0f);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_D) || mInput.IsKeyHeld(SDL_SCANCODE_RIGHT)) {
-        mPlayer->SetDirectionX(1.0f);
+        mPlayer->SetAccelerationX(1.0f);
     }
     if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
         mPlayer->TakeDamage(10);

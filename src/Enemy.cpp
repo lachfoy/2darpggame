@@ -49,11 +49,10 @@ Enemy::Enemy(Vector2 position, Player* player, const char* enemyScript)
     mMaxHealth = lua_tonumber(mLuaState, -1);
     mHealth = mMaxHealth;
 
+    // set default state to idle
     mState = EnemyState::STATE_IDLE;
-    std::cout << "state: " << (int)mState << std::endl;
 
     mRange = 4.0f;
-    mIsPlayerInRange = false;
 
     mId = GetId();
 }
@@ -66,7 +65,7 @@ Enemy::~Enemy()
 void Enemy::CheckPlayerInRange()
 {
     if (!mPlayer) return;
-    std::cout << (mPlayer->Position() - mPosition).Length() << std::endl;
+    //std::cout << (mPlayer->Position() - mPosition).Length() << std::endl;
     mIsPlayerInRange = true ? (mPlayer->Position() - mPosition).Length() <= mRange : false;
 }
 

@@ -2,6 +2,8 @@ texture = "images/enemy.png"
 speed = 1.0
 damage = 10
 max_health = 50
+detect_range = 5.0
+collider_radius = 2.0
 
 enemy_behaviour = coroutine.create(function (enemy)
     actions = {

@@ -78,7 +78,7 @@ private:
     //friend class IdleEnemyState;
     EnemyState mState;
     float mRange;
-    bool mIsPlayerInRange;
+    bool mIsPlayerInRange = false;
     float mColliderRadius;
     Player* mPlayer;
 

@@ -16,8 +16,8 @@ public:
     int Damage() const { return 20; }
 
     // setters
-    void SetDirectionX(float directionX) { mDirection.x = directionX; }
-    void SetDirectionY(float directionY) { mDirection.y = directionY; }
+    void SetAccelerationX(float accelerationX) { mAcceleration.x = accelerationX; }
+    void SetAccelerationY(float accelerationY) { mAcceleration.y = accelerationY; }
 
     // methods
     void TakeDamage(int damage);
@@ -26,10 +26,12 @@ public:
     void DrawHealthbar(Renderer& renderer);
 
 private:
-    Vector2 mDirection;
+    Vector2 mVelocity;
+    Vector2 mAcceleration;
     float mSpeed;
     int mMaxHealth;
     int mHealth;
+    float mFriction;
     
 };
 
