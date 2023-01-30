@@ -5,7 +5,6 @@ Player::Player(Vector2 position, GLuint texture) : Sprite(position, texture)
     mSpeed = 100.0f;
     mMaxHealth = 100;
     mHealth = mMaxHealth;
-    mFriction = 20.0f;
 }
 
 void Player::TakeDamage(int damage)
@@ -24,6 +23,13 @@ void Player::Heal(int amount)
         mHealth = mMaxHealth;
     } else {
         mHealth += amount;
+    }
+}
+
+void Player::Attack()
+{
+    for (int i = 0; i < mNumObservers; i++) {
+        mObservers[i]->OnNotify(*this, 1);
     }
 }
 

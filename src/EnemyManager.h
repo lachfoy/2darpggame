@@ -9,10 +9,11 @@
 #include <memory>
 #include "Map.h"
 #include "Player.h"
+#include "Observer.h"
 
 typedef std::unique_ptr<Enemy> EnemyPtr;
 
-class EnemyManager
+class EnemyManager : public Observer
 {
 public:
     static EnemyManager& Instance()
@@ -27,6 +28,7 @@ public:
     const std::list<EnemyPtr>& Enemies() const { return mEnemies; }
 
     // methods
+    void OnNotify(const Player& player, int event) override;
     void CreateEnemy(Vector2 position, Player* player, const char* enemyScript);
     void UpdateEnemies(float deltaTime);
     void HousekeepEnemies();

@@ -6,6 +6,8 @@
 #include "Vector2.h"
 #include <glad/glad.h>
 #include "Renderer.h"
+#include "AABB.h"
+#include "Observer.h"
 
 class Player : public Sprite
 {
@@ -14,6 +16,7 @@ public:
 
     // getters
     int Damage() const { return 20; }
+    AABB HitBox() const { return AABB(mPosition, Vector2(1.0f, 1.0f)); }
 
     // setters
     void SetAccelerationX(float accelerationX) { mAcceleration.x = accelerationX; }
@@ -22,6 +25,8 @@ public:
     // methods
     void TakeDamage(int damage);
     void Heal(int amount);
+    void AddObserver(Observer* observer) { mObservers[mNumObservers] = observer; mNumObservers++; }
+    void Attack();
     void Update(float deltaTime);
     void DrawHealthbar(Renderer& renderer);
 
@@ -31,8 +36,11 @@ private:
     float mSpeed;
     int mMaxHealth;
     int mHealth;
-    float mFriction;
-    
+    float mFriction = 10.0f;
+
+    Observer* mObservers[1];
+    int mNumObservers = 0;
+
 };
 
 #endif

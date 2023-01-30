@@ -8,6 +8,13 @@ EnemyManager::~EnemyManager()
     mEnemies.clear();
 }
 
+void EnemyManager::OnNotify(const Player& player, int event)
+{
+    if (event == 1) {
+        std::cout << "Enemy manager notified of event " << event << "\n";
+    }
+}
+
 void EnemyManager::CreateEnemy(Vector2 position, Player* player, const char* enemyScript)
 {
     std::cout << "EnemyManager:: Creating new enemy\n";

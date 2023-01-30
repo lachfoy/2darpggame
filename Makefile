@@ -10,6 +10,7 @@ OBJECTS := glad.o\
 	TextureManager.o\
 	Renderer.o\
 	Sprite.o\
+	AABB.o\
 	Player.o\
 	EnemyState.o\
 	Enemy.o\

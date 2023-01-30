@@ -128,6 +128,8 @@ void Game::Create()
     // spawn enemy
     EnemyManager::Instance().CreateEnemy(Vector2(15.0f, 15.0f), mPlayer, "scripts/enemy.lua");
 
+    mPlayer->AddObserver(&EnemyManager::Instance()); // hmm....
+
     // open lua
     L = luaL_newstate();
     luaL_openlibs(L); // open the base libraries
@@ -156,12 +158,7 @@ void Game::Update(float deltaTime)
         mPlayer->SetAccelerationX(1.0f);
     }
     if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
-        //mPlayer->TakeDamage(10);
-        Vector2 impulse = (EnemyManager::Instance().Enemies().front()->Position() - mPlayer->Position());
-        impulse.Normalize();
-        impulse *= 50.0f;
-        EnemyManager::Instance().Enemies().front()->AddVelocity(impulse);
-        //std::cout << "position: " << mPlayer->Position().x << ", " << mPlayer->Position().y << "\n";
+        mPlayer->Attack();
     }
 
     mPlayer->Update(deltaTime);
@@ -172,7 +169,15 @@ void Game::Update(float deltaTime)
     
     // temp hack - should be done elsewhere
     for (const auto& enemy : EnemyManager::Instance().Enemies()) {
+        
         enemy->CheckPlayerInRange();
+
+        if (mPlayer->HitBox().Intersects(enemy->Position())) {
+            Vector2 impulse = (enemy->Position() - mPlayer->Position());
+            impulse.Normalize();
+            impulse *= 20.0f;
+            enemy->AddVelocity(impulse);
+        }
     } 
 
     // "housekeeping"

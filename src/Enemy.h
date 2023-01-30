@@ -69,7 +69,7 @@ private:
     bool mRemovable = false;
     Vector2 mVelocity;
     Vector2 mAcceleration;
-    float mFriction;
+    float mFriction = 10.0f;
     float mSpeed;
     int mDamage;
     int mMaxHealth;
