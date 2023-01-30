@@ -96,10 +96,10 @@ void Renderer::InitShaders()
 void Renderer::SetCameraPosition(float x, float y)
 {
     glm::mat4 projection = glm::ortho(
-        x * mTileSize - mRenderWidth / 2.f,
-        x * mTileSize + mRenderWidth / 2.f,
-        y * mTileSize + mRenderHeight / 2.f,
-        y * mTileSize - mRenderHeight / 2.f
+        x - mRenderWidth / 2.f,
+        x + mRenderWidth / 2.f,
+        y + mRenderHeight / 2.f,
+        y - mRenderHeight / 2.f
     );
 
     glUseProgram(mShader);
@@ -318,7 +318,7 @@ void Renderer::DrawSprite(float x, float y, GLuint texture)
 
     // set up model matrix
     glm::mat4 model = glm::mat4(1.f);
-    model = glm::translate(model, glm::vec3(x * mTileSize, y * mTileSize, 0.f));
+    model = glm::translate(model, glm::vec3(x, y, 0.f));
     model = glm::translate(model, glm::vec3(-0.5f * mTileSize, -0.5f * mTileSize, 0.0f));
     model = glm::scale(model, glm::vec3(mTileSize, mTileSize, 1.f));
 

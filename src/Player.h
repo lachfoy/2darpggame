@@ -16,7 +16,7 @@ public:
 
     // getters
     int Damage() const { return 20; }
-    AABB HitBox() const { return AABB(mPosition, Vector2(1.0f, 1.0f)); }
+    AABB HitBox() const { return AABB(mPosition, Vector2(8.0f, 8.0f)); }
 
     // setters
     void SetAccelerationX(float accelerationX) { mAcceleration.x = accelerationX; }

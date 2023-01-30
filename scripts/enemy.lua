@@ -1,5 +1,5 @@
 texture = "images/enemy.png"
-speed = 30.0
+speed = 480.0
 damage = 10
 max_health = 50
 detect_range = 5.0

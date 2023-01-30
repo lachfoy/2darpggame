@@ -52,7 +52,7 @@ Enemy::Enemy(Vector2 position, Player* player, const char* enemyScript)
     // set default state to idle
     mState = EnemyState::STATE_IDLE;
 
-    mRange = 4.0f;
+    mRange = 64.0f;
 
     mId = GetId();
 }

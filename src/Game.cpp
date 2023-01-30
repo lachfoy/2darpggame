@@ -123,10 +123,10 @@ void Game::Create()
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
     // spawn player
-    mPlayer = new Player(Vector2(10.0f, 10.0f), TextureManager::Instance().GetTexture("images/test.png"));
+    mPlayer = new Player(Vector2(160.0f, 160.0f), TextureManager::Instance().GetTexture("images/test.png"));
 
     // spawn enemy
-    EnemyManager::Instance().CreateEnemy(Vector2(15.0f, 15.0f), mPlayer, "scripts/enemy.lua");
+    EnemyManager::Instance().CreateEnemy(Vector2(240.0f, 240.0f), mPlayer, "scripts/enemy.lua");
 
     mPlayer->AddObserver(&EnemyManager::Instance()); // hmm....
 
@@ -175,7 +175,7 @@ void Game::Update(float deltaTime)
         if (mPlayer->HitBox().Intersects(enemy->Position())) {
             Vector2 impulse = (enemy->Position() - mPlayer->Position());
             impulse.Normalize();
-            impulse *= 20.0f;
+            impulse *= 320.0f;
             enemy->AddVelocity(impulse);
         }
     } 
