@@ -18,12 +18,12 @@ public:
     ~TextureManager();
 
     Texture GetTexture(const char* name);
-    void LoadTexture(const char* path);
+    //void LoadTexture(const char* path);
     
 private:
     TextureManager();
 
-    //void LoadTexture(const char* path);
+    void LoadTexture(const char* path);
 
     std::unordered_map<std::string, Texture> mTextures;
 
