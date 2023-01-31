@@ -23,13 +23,9 @@ extern "C"
 #include "Texture.h"
 #include "Renderer.h"
 #include "Player.h"
-#include "EnemyBehaviours.h"
-#include <memory>
-#include "ConcreteEnemyStates.h"
 #include "AABB.h"
 
 #include "EnemyState.h"
-//class EnemyState;
 
 class Enemy : public Sprite
 {
@@ -76,14 +72,9 @@ private:
     int mDamage;
     int mMaxHealth;
     int mHealth;
-    lua_State* mLuaState;
-    //EnemyState* mState;
-    //friend class MoveEnemyState;
-    //friend class IdleEnemyState;
     EnemyState mState;
-    float mRange;
+    float mDetectRange;
     bool mIsPlayerInRange = false;
-    float mColliderRadius;
     Player* mPlayer;
 
 };

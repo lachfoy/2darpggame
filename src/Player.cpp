@@ -4,7 +4,7 @@
 
 Player::Player(Vector2 position, Texture texture) : Sprite(position, texture)
 {
-    mSpeed = 1600.0f;
+    mSpeed = 1120.0f;
     mMaxHealth = 100;
     mHealth = mMaxHealth;
 }

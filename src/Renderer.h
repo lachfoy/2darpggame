@@ -64,8 +64,8 @@ private:
     int mTileSize;
     const float mTileTexSize = 1.0f / 16.0f; // always 16 tiles per row in tileset
 
-    int mRenderWidth = 320 / 2;
-    int mRenderHeight = 240 / 2;
+    int mRenderWidth = 400/2;
+    int mRenderHeight = 300/2;
 
     void CompileShaderProgram(GLuint* shader, const char* vertexSrc, const char* fragmentSrc);
     void CheckShaderCompilationError(GLuint id);

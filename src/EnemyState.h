@@ -8,19 +8,4 @@ enum class EnemyState
     STATE_HURT
 };
 
-// class Enemy;
-// class MoveEnemyState;
-// class IdleEnemyState;
-
-// class EnemyState
-// {
-// public:
-//     virtual ~EnemyState() {};
-//     virtual void Update(Enemy& enemy, float deltaTime) = 0;
-
-//     static MoveEnemyState moveEnemyState;
-//     static IdleEnemyState idleEnemyState;
-
-// };
-
 #endif

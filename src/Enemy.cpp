@@ -26,47 +26,46 @@ Enemy::Enemy(Vector2 position, Player* player, const char* enemyScript)
     mPlayer = player;
 
     // open Lua file
-    mLuaState = luaL_newstate();
-    luaL_openlibs(mLuaState);
+    lua_State* L = luaL_newstate();
+    luaL_openlibs(L);
 
-    lua_register(mLuaState, "MoveTo", MoveTo); // expose api function to lua
+    lua_register(L, "MoveTo", MoveTo); // expose api function to lua
 
     // run the lua file
-    if (luaL_dofile(mLuaState, enemyScript) != 0) {
-        std::cout << lua_tostring(mLuaState, -1) << "\n"; // error at top of stack
+    if (luaL_dofile(L, enemyScript) != 0) {
+        std::cout << lua_tostring(L, -1) << "\n"; // error at top of stack
     }
 
     // query values 
-    lua_getglobal(mLuaState, "texture");
-    lua_getglobal(mLuaState, "speed");
-    lua_getglobal(mLuaState, "damage");
-    lua_getglobal(mLuaState, "max_health");
+    lua_getglobal(L, "texture");
+    lua_getglobal(L, "speed");
+    lua_getglobal(L, "damage");
+    lua_getglobal(L, "max_health");
 
     // get values from the stack
-    mTexture = TextureManager::Instance().GetTexture(lua_tostring(mLuaState, -4));
-    mSpeed = lua_tonumber(mLuaState, -3);
-    mDamage = lua_tonumber(mLuaState, -2);
-    mMaxHealth = lua_tonumber(mLuaState, -1);
+    mTexture = TextureManager::Instance().GetTexture(lua_tostring(L, -4));
+    mSpeed = lua_tonumber(L, -3);
+    mDamage = lua_tonumber(L, -2);
+    mMaxHealth = lua_tonumber(L, -1);
     mHealth = mMaxHealth;
 
     // set default state to idle
     mState = EnemyState::STATE_IDLE;
 
-    mRange = 64.0f;
+    mDetectRange = 64.0f;
 
     mId = GetId();
 }
 
 Enemy::~Enemy()
 {
-    lua_close(mLuaState);
 }
 
 void Enemy::CheckPlayerInRange()
 {
     if (!mPlayer) return;
     //std::cout << (mPlayer->Position() - mPosition).Length() << std::endl;
-    mIsPlayerInRange = true ? (mPlayer->Position() - mPosition).Length() <= mRange : false;
+    mIsPlayerInRange = true ? (mPlayer->Position() - mPosition).Length() <= mDetectRange : false;
 }
 
 void Enemy::TakeDamage(int damage)
