@@ -1,6 +1,8 @@
 #include "Player.h"
 
-Player::Player(Vector2 position, GLuint texture) : Sprite(position, texture)
+#include "EnemyManager.h"
+
+Player::Player(Vector2 position, Texture texture) : Sprite(position, texture)
 {
     mSpeed = 1600.0f;
     mMaxHealth = 100;
@@ -31,24 +33,26 @@ void Player::Attack()
     for (int i = 0; i < mNumObservers; i++) {
         mObservers[i]->OnNotify(*this, 1);
     }
+
+    EnemyManager::Instance().HandlePlayerAttack(*this);
 }
 
 void Player::Update(float deltaTime)
 {
-    if (mAcceleration != Vector2::Zero()) {
-        mAcceleration.Normalize();
+    if (mDirection != Vector2::Zero()) {
+        mDirection.Normalize();
     }
 
     // apply speed and friction
-    mAcceleration *= mSpeed;
+    mAcceleration = mDirection * mSpeed;
     mAcceleration -= mVelocity * mFriction;
 
     // calculate new position and velocity from acceleration
     mPosition += mVelocity * deltaTime + mAcceleration * 0.5f * deltaTime * deltaTime;
     mVelocity += mAcceleration * deltaTime;
 
-    // reset acceleration
-    mAcceleration = Vector2::Zero();
+    // reset direction
+    mDirection = Vector2::Zero();
 }
 
 void Player::DrawHealthbar(Renderer& renderer)

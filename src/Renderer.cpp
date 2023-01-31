@@ -153,9 +153,8 @@ void Renderer::InitMapData(int mapWidth, int mapHeight, uint8_t* tileData, int t
     for (int x = 0; x < mapWidth; x++) {
         for (int y = 0; y < mapHeight; y++) {
             uint8_t tile = tileData[x + mapWidth * y];
-            float tx0 = (tile & 15) * mTileTexSize + mTileTexPadding;
-            float ty0 = (tile >> 4) * mTileTexSize + mTileTexPadding;
-            float tySize = mTileTexSize - mTileTexPadding * 2;
+            float tx0 = (tile & 15) * mTileTexSize;
+            float ty0 = (tile >> 4) * mTileTexSize;
 
             // vertex 0 (top left)
             vertexData[i + 0] = x; // position x
@@ -167,7 +166,7 @@ void Renderer::InitMapData(int mapWidth, int mapHeight, uint8_t* tileData, int t
             // vertex 1 (top right)
             vertexData[i + 0] = x + 1; // position x
             vertexData[i + 1] = y; // position y
-            vertexData[i + 2] = tx0 + tySize; // texcoord x
+            vertexData[i + 2] = tx0 + mTileTexSize; // texcoord x
             vertexData[i + 3] = ty0; // texcoord y
             i += 4;
 
@@ -175,14 +174,14 @@ void Renderer::InitMapData(int mapWidth, int mapHeight, uint8_t* tileData, int t
             vertexData[i + 0] = x; // position x
             vertexData[i + 1] = y + 1; // position y
             vertexData[i + 2] = tx0; // texcoord x
-            vertexData[i + 3] = ty0 + tySize; // texcoord y
+            vertexData[i + 3] = ty0 + mTileTexSize; // texcoord y
             i += 4;
 
             // vertex 3 (bottom right)
             vertexData[i + 0] = x + 1; // position x
             vertexData[i + 1] = y + 1; // position y
-            vertexData[i + 2] = tx0 + tySize; // texcoord x
-            vertexData[i + 3] = ty0 + tySize; // texcoord y
+            vertexData[i + 2] = tx0 + mTileTexSize; // texcoord x
+            vertexData[i + 3] = ty0 + mTileTexSize; // texcoord y
             i += 4;
         }
     }
@@ -308,19 +307,19 @@ void Renderer::LoadFont(const char* font, unsigned int fontSize)
     FT_Done_FreeType(library);
 }
 
-void Renderer::DrawSprite(float x, float y, GLuint texture)
+void Renderer::DrawSprite(float x, float y, Texture& texture)
 {
     glUseProgram(mShader);
 
     // bind
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, texture.id);
     glBindVertexArray(mQuadVao);
 
     // set up model matrix
     glm::mat4 model = glm::mat4(1.f);
     model = glm::translate(model, glm::vec3(x, y, 0.f));
-    model = glm::translate(model, glm::vec3(-0.5f * mTileSize, -0.5f * mTileSize, 0.0f));
-    model = glm::scale(model, glm::vec3(mTileSize, mTileSize, 1.f));
+    model = glm::translate(model, glm::vec3(-0.5f * texture.w, -0.5f * texture.h, 0.0f));
+    model = glm::scale(model, glm::vec3(texture.w, texture.h, 1.f));
 
     // set uniforms
     glUniformMatrix4fv(glGetUniformLocation(mShader, "model"), 1, false, glm::value_ptr(model));
@@ -330,12 +329,12 @@ void Renderer::DrawSprite(float x, float y, GLuint texture)
     glBindVertexArray(0);
 }
 
-void Renderer::DrawMap(GLuint texture)
+void Renderer::DrawMap(Texture& texture)
 {
     glUseProgram(mShader);
 
     //bind
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, texture.id);
     glBindVertexArray(mMapVao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mMapEbo);
 

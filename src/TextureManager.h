@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include <glad/glad.h>
+#include "Texture.h"
 
 class TextureManager
 {
@@ -16,14 +17,15 @@ public:
 
     ~TextureManager();
 
-    GLuint GetTexture(const char* name);
+    Texture GetTexture(const char* name);
     void LoadTexture(const char* path);
-
-
+    
 private:
     TextureManager();
 
-    std::unordered_map<std::string, GLuint> mTextures;
+    //void LoadTexture(const char* path);
+
+    std::unordered_map<std::string, Texture> mTextures;
 
 };
 

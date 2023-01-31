@@ -111,11 +111,6 @@ void Game::Create()
     mRenderer.InitQuadVertexData();
     mRenderer.InitTextData();
 
-    // load required textures
-    TextureManager::Instance().LoadTexture("images/test.png");
-    TextureManager::Instance().LoadTexture("images/enemy.png");
-    TextureManager::Instance().LoadTexture("images/tileset.png");
-
     // load required fonts
     mRenderer.LoadFont("fonts/arial.ttf", 16);
 
@@ -123,7 +118,7 @@ void Game::Create()
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
     // spawn player
-    mPlayer = new Player(Vector2(160.0f, 160.0f), TextureManager::Instance().GetTexture("images/test.png"));
+    mPlayer = new Player(Vector2(160.0f, 160.0f), TextureManager::Instance().GetTexture("images/character_test.png"));
 
     // spawn enemy
     EnemyManager::Instance().CreateEnemy(Vector2(240.0f, 240.0f), mPlayer, "scripts/enemy.lua");
@@ -146,16 +141,16 @@ void Game::Update(float deltaTime)
 {
     // player movement
     if (mInput.IsKeyHeld(SDL_SCANCODE_W) || mInput.IsKeyHeld(SDL_SCANCODE_UP)) {
-        mPlayer->SetAccelerationY(-1.0f);
+        mPlayer->SetDirectionY(-1.0f);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_A) || mInput.IsKeyHeld(SDL_SCANCODE_LEFT)) {
-        mPlayer->SetAccelerationX(-1.0f);
+        mPlayer->SetDirectionX(-1.0f);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_S) || mInput.IsKeyHeld(SDL_SCANCODE_DOWN)) {
-        mPlayer->SetAccelerationY(1.0f);
+        mPlayer->SetDirectionY(1.0f);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_D) || mInput.IsKeyHeld(SDL_SCANCODE_RIGHT)) {
-        mPlayer->SetAccelerationX(1.0f);
+        mPlayer->SetDirectionX(1.0f);
     }
     if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
         mPlayer->Attack();
@@ -169,15 +164,7 @@ void Game::Update(float deltaTime)
     
     // temp hack - should be done elsewhere
     for (const auto& enemy : EnemyManager::Instance().Enemies()) {
-        
         enemy->CheckPlayerInRange();
-
-        if (mPlayer->HitBox().Intersects(enemy->Position())) {
-            Vector2 impulse = (enemy->Position() - mPlayer->Position());
-            impulse.Normalize();
-            impulse *= 320.0f;
-            enemy->AddVelocity(impulse);
-        }
     } 
 
     // "housekeeping"

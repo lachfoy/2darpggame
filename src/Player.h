@@ -4,7 +4,7 @@
 #include "Sprite.h"
 
 #include "Vector2.h"
-#include <glad/glad.h>
+#include "Texture.h"
 #include "Renderer.h"
 #include "AABB.h"
 #include "Observer.h"
@@ -12,15 +12,16 @@
 class Player : public Sprite
 {
 public:
-    Player(Vector2 position, GLuint texture);
+    Player(Vector2 position, Texture texture);
 
     // getters
     int Damage() const { return 20; }
-    AABB HitBox() const { return AABB(mPosition, Vector2(8.0f, 8.0f)); }
+    AABB HitBox() const { return AABB(mPosition, Vector2(10.0f, 10.0f)); }
+    AABB AttackHitBox() const { return AABB(mPosition, Vector2(32.0f, 32.0f)); }
 
     // setters
-    void SetAccelerationX(float accelerationX) { mAcceleration.x = accelerationX; }
-    void SetAccelerationY(float accelerationY) { mAcceleration.y = accelerationY; }
+    void SetDirectionX(float directionX) { mDirection.x = directionX; }
+    void SetDirectionY(float directionY) { mDirection.y = directionY; }
 
     // methods
     void TakeDamage(int damage);
@@ -31,6 +32,7 @@ public:
     void DrawHealthbar(Renderer& renderer);
 
 private:
+    Vector2 mDirection;
     Vector2 mVelocity;
     Vector2 mAcceleration;
     float mSpeed;

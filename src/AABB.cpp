@@ -20,7 +20,7 @@ bool AABB::Intersects(Vector2 other)
     );
 }
 
-bool AABB::Intersects(AABB& other)
+bool AABB::Intersects(const AABB& other)
 {
     return (
         mMin.x <= other.Max().x &&

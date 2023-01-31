@@ -39,17 +39,17 @@ TextureManager::~TextureManager()
     // clear textures
     for (auto& it: mTextures) {
         std::cout << "Deleting texture: " << it.first << std::endl;
-        glDeleteTextures(1, &it.second);
+        glDeleteTextures(1, &it.second.id);
     }
     
     mTextures.clear();
 }
 
-GLuint TextureManager::GetTexture(const char* name)
+Texture TextureManager::GetTexture(const char* name)
 {
-    if (!mTextures[name]) {
-        std::cout << "TextureManager:: Warning: accessing texture that has not been loaded!\n";
-        return 0;
+    if (!(mTextures.find(name) != mTextures.end())) {
+        std::cout << "TextureManager:: loading texture " << name << "\n";
+        LoadTexture(name);
     }
     
     return mTextures[name];
@@ -61,11 +61,14 @@ void TextureManager::LoadTexture(const char* path)
     int w, h, nChannels;
     unsigned char* data = stbi_load(path, &w, &h, &nChannels, 0);
     
-    GLuint texture;
+    Texture texture;
+
+    texture.w = w;
+    texture.h = h;
 
     // create texture
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glGenTextures(1, &texture.id);
+    glBindTexture(GL_TEXTURE_2D, texture.id);
 
     // technically every texture should be 32bpp but if not...
     if (nChannels == 3) {
@@ -86,7 +89,7 @@ void TextureManager::LoadTexture(const char* path)
     // free data
     stbi_image_free(data);
 
-    std::cout << "Created texture from " << path << " with id " << texture << std::endl;
+    std::cout << "Created texture from " << path << " with id " << texture.id << std::endl;
 
     mTextures.insert({ path, texture });
 }

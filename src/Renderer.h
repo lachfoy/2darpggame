@@ -6,6 +6,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include "Texture.h"
 
 struct FTCharacter
 {
@@ -31,8 +32,8 @@ public:
     void InitTextData();
     void LoadFont(const char* font, unsigned int fontSize);
 
-    void DrawSprite(float x, float y, GLuint texture);
-    void DrawMap(GLuint texture);
+    void DrawSprite(float x, float y, Texture& texture);
+    void DrawMap(Texture& texture);
     void DrawText(float x, float y, std::string text);
 
     void DrawRectangle(float x, float y, int w, int h, float r, float g, float b, float a);
@@ -47,6 +48,7 @@ private:
     // quad data
     GLuint mQuadVbo;
     GLuint mQuadVao;
+    int mSpriteSize;
 
     // map data
     GLuint mMapVbo;
@@ -60,11 +62,10 @@ private:
 
     int mTileMapLength;
     int mTileSize;
-    const float mTileTexSize = 1 / 16.f; // always 16 tiles per row in tileset
-    const float mTileTexPadding = 1 / 256.0f;
+    const float mTileTexSize = 1.0f / 16.0f; // always 16 tiles per row in tileset
 
-    int mRenderWidth = 320;
-    int mRenderHeight = 240;
+    int mRenderWidth = 320 / 2;
+    int mRenderHeight = 240 / 2;
 
     void CompileShaderProgram(GLuint* shader, const char* vertexSrc, const char* fragmentSrc);
     void CheckShaderCompilationError(GLuint id);

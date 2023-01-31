@@ -28,6 +28,19 @@ void EnemyManager::UpdateEnemies(float deltaTime)
     }
 }
 
+void EnemyManager::HandlePlayerAttack(const Player& player)
+{
+    for (const auto& enemy : mEnemies) {
+        if (player.AttackHitBox().Intersects(enemy->HitBox())) {
+            std::cout << "EnemyManager:: player attack hit an enemy\n";
+            Vector2 impulse = (enemy->Position() - player.Position());
+            impulse.Normalize();
+            impulse *= 320.0f;
+            enemy->AddVelocity(impulse);
+        }
+    }
+}
+
 void EnemyManager::HousekeepEnemies()
 {
     mEnemies.remove_if([&](const EnemyPtr& enemy) -> bool { return enemy->Removable(); });

@@ -20,12 +20,13 @@ extern "C"
 #endif
 
 #include "Vector2.h"
-#include <glad/glad.h>
+#include "Texture.h"
 #include "Renderer.h"
 #include "Player.h"
 #include "EnemyBehaviours.h"
 #include <memory>
 #include "ConcreteEnemyStates.h"
+#include "AABB.h"
 
 #include "EnemyState.h"
 //class EnemyState;
@@ -42,6 +43,7 @@ public:
     int Id() const { return mId; }
     bool Removable() const { return mRemovable; }
     int Damage() const { return mDamage; }
+    AABB HitBox() const { return AABB(mPosition, Vector2(10.0f, 10.0f)); }
 
     // setters
     void SetState(EnemyState enemyState) { mState = enemyState; }

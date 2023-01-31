@@ -3,16 +3,16 @@
 
 #include "Renderer.h"
 #include "TextureManager.h"
-#include <glad/glad.h>
+#include "Texture.h"
 
 class Map
 {
 public:
-    Map(int mapWidth, int mapHeight, uint8_t* tileData, bool* solidData, GLuint tilesetTexture, int tileSize, Renderer& renderer);
+    Map(int mapWidth, int mapHeight, uint8_t* tileData, bool* solidData, Texture tilesetTexture, int tileSize, Renderer& renderer);
     ~Map();
 
     // map generation
-    static Map* RandomMap(int width, int height, GLuint tilesetTexture, int tileSize, Renderer& renderer);
+    static Map* RandomMap(int width, int height, Texture tilesetTexture, int tileSize, Renderer& renderer);
     
     void DrawMap(Renderer& renderer);
 
@@ -21,7 +21,7 @@ private:
     int mMapHeight;
     uint8_t* mTileData;
     bool* mSolidData;
-    GLuint mTilesetTexture;
+    Texture mTilesetTexture;
     int mTileSize;
 
 };

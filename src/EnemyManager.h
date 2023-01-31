@@ -31,6 +31,7 @@ public:
     void OnNotify(const Player& player, int event) override;
     void CreateEnemy(Vector2 position, Player* player, const char* enemyScript);
     void UpdateEnemies(float deltaTime);
+    void HandlePlayerAttack(const Player& player);
     void HousekeepEnemies();
     void DrawEnemies(Renderer& renderer);
     void DrawEnemyHealthbars(Renderer& renderer);

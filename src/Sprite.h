@@ -2,14 +2,14 @@
 #define SPRITE_H_
 
 #include "Vector2.h"
-#include <glad/glad.h>
+#include "Texture.h"
 #include "Renderer.h"
 
 class Sprite
 {
 public:
     Sprite() = default;
-    Sprite(Vector2 position, GLuint texture);
+    Sprite(Vector2 position, Texture texture);
     ~Sprite() {}
 
     // getters
@@ -23,7 +23,7 @@ public:
 
 protected:
     Vector2 mPosition;
-    GLuint mTexture;
+    Texture mTexture;
 
 };
 

@@ -4,7 +4,7 @@
 #include <fstream> // ifstream, ios::binary, ios::in
 #include "Random.h"
 
-Map::Map(int mapWidth, int mapHeight, uint8_t* tileData, bool* solidData, GLuint tilesetTexture, int tileSize, Renderer& renderer)
+Map::Map(int mapWidth, int mapHeight, uint8_t* tileData, bool* solidData, Texture tilesetTexture, int tileSize, Renderer& renderer)
 {
     mMapWidth = mapWidth;
     mMapHeight = mapHeight;
@@ -30,14 +30,14 @@ void Map::DrawMap(Renderer& renderer)
     renderer.DrawMap(mTilesetTexture);
 }
 
-Map* Map::RandomMap(int width, int height, GLuint tilesetTexture, int tileSize, Renderer& renderer)
+Map* Map::RandomMap(int width, int height, Texture tilesetTexture, int tileSize, Renderer& renderer)
 {
     std::cout << "Map:: Generating random map\n";
 
     uint8_t* tileData = new uint8_t[width * height];
     bool* solidData = new bool[width * height];
 
-    const int numUniqueTiles = 3;
+    const int numUniqueTiles = 4;
 
     for (int i = 0; i < width * height; i++) {
         tileData[i] = gRandom.Range(0, numUniqueTiles - 1);

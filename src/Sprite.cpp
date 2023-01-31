@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-Sprite::Sprite(Vector2 position, GLuint texture)
+Sprite::Sprite(Vector2 position, Texture texture)
 {
     mPosition = position;
     mTexture = texture;

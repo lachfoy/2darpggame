@@ -14,7 +14,7 @@ public:
     Vector2 Max() const { return mMax; }
 
     bool Intersects(Vector2 other);
-    bool Intersects(AABB& other);
+    bool Intersects(const AABB& other);
 
     Vector2 mMin;
     Vector2 mMax;
