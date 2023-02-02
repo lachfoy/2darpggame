@@ -12,7 +12,6 @@ OBJECTS := glad.o\
 	Sprite.o\
 	AABB.o\
 	Player.o\
-	EnemyState.o\
 	Enemy.o\
 	EnemyManager.o\
 	Map.o\

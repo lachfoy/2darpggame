@@ -40,6 +40,7 @@ private:
     int mHealth;
     float mFriction = 10.0f;
 
+    // some testing observers code
     Observer* mObservers[1];
     int mNumObservers = 0;
 

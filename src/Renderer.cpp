@@ -115,6 +115,7 @@ void Renderer::InitQuadVertexData()
     glGenBuffers(1, &mQuadVbo);
     glBindBuffer(GL_ARRAY_BUFFER, mQuadVbo);
 
+    // ccw winding order
     float vertices[] = { 
         // xy       // uv
         0.0f, 1.0f, 0.0f, 1.0f,
@@ -135,6 +136,19 @@ void Renderer::InitQuadVertexData()
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+}
+
+void Renderer::InitPartialVbo()
+{
+    glGenVertexArrays(1, &mPartialVao);
+    glGenBuffers(1, &mPartialVbo);
+    glBindVertexArray(mPartialVao);
+    glBindBuffer(GL_ARRAY_BUFFER, mPartialVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 void Renderer::InitMapData(int mapWidth, int mapHeight, uint8_t* tileData, int tileSize)
@@ -325,6 +339,50 @@ void Renderer::DrawSprite(float x, float y, Texture& texture)
     glUniformMatrix4fv(glGetUniformLocation(mShader, "model"), 1, false, glm::value_ptr(model));
     glUniform4f(glGetUniformLocation(mShader, "color"), 1.f, 1.f, 1.f, 1.f);
     
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+}
+
+// should be in pixels actually
+void Renderer::DrawPartialSprite(float x, float y, int tx0, int ty0, int tx1, int ty1, Texture& texture)
+{
+    glUseProgram(mShader);
+
+    // bind
+    glBindTexture(GL_TEXTURE_2D, texture.id);
+    glBindVertexArray(mPartialVao);
+
+    const float texelSizeX = 1.0f / texture.w;
+    const float texelSizeY = 1.0f / texture.h;
+    
+    // ccw winding order
+    float vertices[] = { 
+        // xy       // uv
+        0.0f, 1.0f, texelSizeX * tx0, texelSizeY * ty1,
+        1.0f, 0.0f, texelSizeX * tx1, texelSizeY * ty0,
+        0.0f, 0.0f, texelSizeX * tx0, texelSizeY * ty0,
+
+        0.0f, 1.0f, texelSizeX * tx0, texelSizeY * ty1,
+        1.0f, 1.0f, texelSizeX * tx1, texelSizeY * ty1,
+        1.0f, 0.0f, texelSizeX * tx1, texelSizeY * ty0
+    };
+
+    glBindBuffer(GL_ARRAY_BUFFER, mPartialVbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // set up model matrix
+    const int frameSize = 32; // temp
+    glm::mat4 model = glm::mat4(1.f);
+    model = glm::translate(model, glm::vec3(x, y, 0.f));
+    model = glm::translate(model, glm::vec3(-0.5f * frameSize, -0.5f * frameSize, 0.0f));
+    model = glm::scale(model, glm::vec3(frameSize, frameSize, 1.f));
+
+    // set uniforms
+    glUniformMatrix4fv(glGetUniformLocation(mShader, "model"), 1, false, glm::value_ptr(model));
+    glUniform4f(glGetUniformLocation(mShader, "color"), 1.f, 1.f, 1.f, 1.f);
+    
+    // draw
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 }

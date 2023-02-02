@@ -27,12 +27,14 @@ public:
 
     void InitShaders();
     void InitQuadVertexData();
+    void InitPartialVbo();
     void InitMapData(int mapWidth, int mapHeight, uint8_t* tileData, int tileSize);
 
     void InitTextData();
     void LoadFont(const char* font, unsigned int fontSize);
 
     void DrawSprite(float x, float y, Texture& texture);
+    void DrawPartialSprite(float x, float y, int tx0, int ty0, int tx1, int ty1, Texture& texture);
     void DrawMap(Texture& texture);
     void DrawText(float x, float y, std::string text);
 
@@ -49,6 +51,9 @@ private:
     GLuint mQuadVbo;
     GLuint mQuadVao;
     int mSpriteSize;
+
+    GLuint mPartialVbo;
+    GLuint mPartialVao;
 
     // map data
     GLuint mMapVbo;

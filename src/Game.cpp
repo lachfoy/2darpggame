@@ -56,6 +56,9 @@ bool Game::Init()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    // wireframe
+    //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
     return true;
 }
 
@@ -109,6 +112,7 @@ void Game::Create()
     // init render stuff
     mRenderer.InitShaders();
     mRenderer.InitQuadVertexData();
+    mRenderer.InitPartialVbo();
     mRenderer.InitTextData();
 
     // load required fonts
@@ -118,7 +122,9 @@ void Game::Create()
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
     // spawn player
-    mPlayer = new Player(Vector2(160.0f, 160.0f), TextureManager::Instance().GetTexture("images/character_test.png"));
+    mPlayer = new Player(Vector2(0.0f, 0.0f), TextureManager::Instance().GetTexture("images/character_test.png"));
+
+    partialSpriteTest = TextureManager::Instance().GetTexture("images/character_attack.png");
 
     // spawn enemy
     EnemyManager::Instance().CreateEnemy(Vector2(240.0f, 240.0f), mPlayer, "scripts/enemy.lua");
@@ -183,6 +189,8 @@ void Game::Draw()
     mPlayer->Draw(mRenderer);
 
     mRenderer.DrawText(400, 300, "Hello world");
+
+    mRenderer.DrawPartialSprite(0.0f, 0.0f, 0, 0, 32, 32, partialSpriteTest);
 
     SDL_GL_SwapWindow(mWindow);
 }

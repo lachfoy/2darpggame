@@ -30,10 +30,12 @@ void Player::Heal(int amount)
 
 void Player::Attack()
 {
+    // option 1 - handle through a decoupled interface
     for (int i = 0; i < mNumObservers; i++) {
         mObservers[i]->OnNotify(*this, 1);
     }
 
+    // option 2 - just leave it coupled 
     EnemyManager::Instance().HandlePlayerAttack(*this);
 }
 
