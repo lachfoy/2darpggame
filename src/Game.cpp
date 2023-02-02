@@ -190,7 +190,7 @@ void Game::Draw()
 
     mRenderer.DrawText(400, 300, "Hello world");
 
-    mRenderer.DrawPartialSprite(0.0f, 0.0f, 0, 0, 32, 32, partialSpriteTest);
+    mRenderer.DrawPartialSprite(0.0f, 0.0f, 32, 32, 32, 32, partialSpriteTest);
 
     SDL_GL_SwapWindow(mWindow);
 }

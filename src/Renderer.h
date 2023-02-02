@@ -34,7 +34,7 @@ public:
     void LoadFont(const char* font, unsigned int fontSize);
 
     void DrawSprite(float x, float y, Texture& texture);
-    void DrawPartialSprite(float x, float y, int tx0, int ty0, int tx1, int ty1, Texture& texture);
+    void DrawPartialSprite(float x, float y, int offsetX, int offsetY, int w, int h, Texture& texture);
     void DrawMap(Texture& texture);
     void DrawText(float x, float y, std::string text);
 

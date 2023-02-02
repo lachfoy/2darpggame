@@ -344,7 +344,7 @@ void Renderer::DrawSprite(float x, float y, Texture& texture)
 }
 
 // should be in pixels actually
-void Renderer::DrawPartialSprite(float x, float y, int tx0, int ty0, int tx1, int ty1, Texture& texture)
+void Renderer::DrawPartialSprite(float x, float y, int offsetX, int offsetY, int w, int h, Texture& texture)
 {
     glUseProgram(mShader);
 
@@ -352,19 +352,22 @@ void Renderer::DrawPartialSprite(float x, float y, int tx0, int ty0, int tx1, in
     glBindTexture(GL_TEXTURE_2D, texture.id);
     glBindVertexArray(mPartialVao);
 
-    const float texelSizeX = 1.0f / texture.w;
-    const float texelSizeY = 1.0f / texture.h;
+    // calculate texture coordinates
+    float tx0 = offsetX * (1.0f / texture.w);
+    float ty0 = offsetY * (1.0f / texture.h);
+    float tx1 = (offsetX + w) * (1.0f / texture.w);
+    float ty1 = (offsetY + h) * (1.0f / texture.h);
     
     // ccw winding order
     float vertices[] = { 
         // xy       // uv
-        0.0f, 1.0f, texelSizeX * tx0, texelSizeY * ty1,
-        1.0f, 0.0f, texelSizeX * tx1, texelSizeY * ty0,
-        0.0f, 0.0f, texelSizeX * tx0, texelSizeY * ty0,
+        0.0f, 1.0f, tx0, ty1,
+        1.0f, 0.0f, tx1, ty0,
+        0.0f, 0.0f, tx0, ty0,
 
-        0.0f, 1.0f, texelSizeX * tx0, texelSizeY * ty1,
-        1.0f, 1.0f, texelSizeX * tx1, texelSizeY * ty1,
-        1.0f, 0.0f, texelSizeX * tx1, texelSizeY * ty0
+        0.0f, 1.0f, tx0, ty1,
+        1.0f, 1.0f, tx1, ty1,
+        1.0f, 0.0f, tx1, ty0
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, mPartialVbo);
@@ -372,11 +375,10 @@ void Renderer::DrawPartialSprite(float x, float y, int tx0, int ty0, int tx1, in
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // set up model matrix
-    const int frameSize = 32; // temp
     glm::mat4 model = glm::mat4(1.f);
     model = glm::translate(model, glm::vec3(x, y, 0.f));
-    model = glm::translate(model, glm::vec3(-0.5f * frameSize, -0.5f * frameSize, 0.0f));
-    model = glm::scale(model, glm::vec3(frameSize, frameSize, 1.f));
+    model = glm::translate(model, glm::vec3(-0.5f * w, -0.5f * h, 0.0f));
+    model = glm::scale(model, glm::vec3(w, h, 1.f));
 
     // set uniforms
     glUniformMatrix4fv(glGetUniformLocation(mShader, "model"), 1, false, glm::value_ptr(model));
