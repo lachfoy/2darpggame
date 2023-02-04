@@ -1,9 +1,20 @@
-texture = "images/enemy.png"
-speed = 480.0
-damage = 10
-max_health = 50
-detect_range = 5.0
-collider_radius = 2.0
+
+<animations>
+    <animation name="walk_south" frames="4">
+        <frame x="0"  y="0" w="16" h="32" />
+        <frame x="16" y="0" w="16" h="32" />
+        <frame x="32" y="0" w="16" h="32" />
+        <frame x="48" y="0" w="16" h="32" />
+    </animation>
+    <animation name="walk_north">
+        <frame x="0" y="0" w="16" h="32" duration="1" />
+        <frame x="0" y="0" w="16" h="32" duration="1" />
+        <frame x="0" y="0" w="16" h="32" duration="1" />
+        <frame x="0" y="0" w="16" h="32" duration="1" />
+    </animation>
+</animations>
+
+<!-- 
 anim = {
     walk_south = {
         { x=0,  y=0, w=16, h=32, duration=3 },
@@ -53,8 +64,4 @@ anim = {
         { x=64, y=224, w=32, h=32, duration=3 },
         { x=96, y=224, w=32, h=32, duration=3 }
     }
-}
-
-print(anim[1])
-
-for i=1,#anim.walk_south do print(anim.walk_south[i].duration) end
+} -->

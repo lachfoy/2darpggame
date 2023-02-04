@@ -56,8 +56,6 @@ private:
     Renderer mRenderer;
     Input mInput;
 
-    Texture partialSpriteTest;
-
 };
 
 #endif

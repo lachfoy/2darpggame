@@ -122,9 +122,7 @@ void Game::Create()
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
     // spawn player
-    mPlayer = new Player(Vector2(0.0f, 0.0f), TextureManager::Instance().GetTexture("images/character_test.png"));
-
-    partialSpriteTest = TextureManager::Instance().GetTexture("images/character_attack.png");
+    mPlayer = new Player(Vector2(160.0f, 160.0f), TextureManager::Instance().GetTexture("images/character.png"));
 
     // spawn enemy
     EnemyManager::Instance().CreateEnemy(Vector2(240.0f, 240.0f), mPlayer, "scripts/enemy.lua");
@@ -148,15 +146,19 @@ void Game::Update(float deltaTime)
     // player movement
     if (mInput.IsKeyHeld(SDL_SCANCODE_W) || mInput.IsKeyHeld(SDL_SCANCODE_UP)) {
         mPlayer->SetDirectionY(-1.0f);
+        mPlayer->SetFacingDirection(FacingDirection::FACING_NORTH);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_A) || mInput.IsKeyHeld(SDL_SCANCODE_LEFT)) {
         mPlayer->SetDirectionX(-1.0f);
+        mPlayer->SetFacingDirection(FacingDirection::FACING_WEST);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_S) || mInput.IsKeyHeld(SDL_SCANCODE_DOWN)) {
         mPlayer->SetDirectionY(1.0f);
+        mPlayer->SetFacingDirection(FacingDirection::FACING_SOUTH);
     }
     if (mInput.IsKeyHeld(SDL_SCANCODE_D) || mInput.IsKeyHeld(SDL_SCANCODE_RIGHT)) {
         mPlayer->SetDirectionX(1.0f);
+        mPlayer->SetFacingDirection(FacingDirection::FACING_EAST);
     }
     if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
         mPlayer->Attack();
@@ -183,14 +185,12 @@ void Game::Draw()
     glClear(GL_COLOR_BUFFER_BIT);
     mMap->DrawMap(mRenderer);   
 
-    EnemyManager::Instance().DrawEnemies(mRenderer);
+    //EnemyManager::Instance().DrawEnemies(mRenderer);
     // EnemyManager::Instance().DrawEnemyHealthbars(mRenderer);
 
     mPlayer->Draw(mRenderer);
 
-    mRenderer.DrawText(400, 300, "Hello world");
-
-    mRenderer.DrawPartialSprite(0.0f, 0.0f, 32, 32, 32, 32, partialSpriteTest);
+    //mRenderer.DrawText(400, 300, "Hello world");
 
     SDL_GL_SwapWindow(mWindow);
 }

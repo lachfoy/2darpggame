@@ -2,7 +2,7 @@ CXXFLAGS := -std=c++11 -g -Wall -Wextra -Wpedantic
 # -Wl,-subsystem,windows for no cmd prompt
 INCLUDES := -Iinclude
 
-LIBS := -lmingw32 -lSDL2main -lSDL2 -llua54 -lfreetype
+LIBS := -lmingw32 -lSDL2main -lSDL2 -llua54 -lfreetype -lpugixml
 OBJECTS := glad.o\
 	Input.o\
 	Random.o\
@@ -11,6 +11,7 @@ OBJECTS := glad.o\
 	Renderer.o\
 	Sprite.o\
 	AABB.o\
+	Animation.o\
 	Player.o\
 	Enemy.o\
 	EnemyManager.o\

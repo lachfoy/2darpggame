@@ -49,6 +49,9 @@ Enemy::Enemy(Vector2 position, Player* player, const char* enemyScript)
     mMaxHealth = lua_tonumber(L, -1);
     mHealth = mMaxHealth;
 
+    // close lua
+    lua_close(L);
+
     // set default state to idle
     mState = EnemyState::STATE_IDLE;
 

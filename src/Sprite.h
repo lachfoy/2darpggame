@@ -19,7 +19,7 @@ public:
     void SetPosition(Vector2 position) { mPosition = position; } 
 
     // methods
-    void Draw(Renderer& renderer);
+    virtual void Draw(Renderer& renderer);
 
 protected:
     Vector2 mPosition;
