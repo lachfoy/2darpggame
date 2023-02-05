@@ -3,7 +3,6 @@
 
 enum class PlayerState
 {
-    STATE_IDLE,
     STATE_MOVE,
     STATE_ATTACK
 };

@@ -24,7 +24,6 @@ extern "C"
 #include "Renderer.h"
 #include "Player.h"
 #include "AABB.h"
-
 #include "EnemyState.h"
 
 class Enemy : public Sprite

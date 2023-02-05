@@ -11,6 +11,7 @@
 #include "Animation.h"
 #include <unordered_map>
 #include <pugixml.hpp>
+#include "PlayerState.h"
 
 enum class FacingDirection
 {
@@ -35,6 +36,7 @@ public:
     void SetDirectionX(float directionX) { mDirection.x = directionX; }
     void SetDirectionY(float directionY) { mDirection.y = directionY; }
     void SetFacingDirection(FacingDirection facingDirection) { if (facingDirection == mFacingDirection) return; mFacingDirection = facingDirection;}
+    void SetState(PlayerState playerState) { mState = playerState; }
 
     // methods
     void TakeDamage(int damage);
@@ -54,6 +56,7 @@ private:
     int mHealth;
     float mFriction = 10.0f;
 
+    PlayerState mState;
     FacingDirection mFacingDirection = FacingDirection::FACING_SOUTH;
     std::string mCurrentAnimation;
     std::map<std::string, Animation*> mAnimations;

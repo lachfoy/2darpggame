@@ -38,6 +38,9 @@ Player::Player(Vector2 position, Texture texture) : Sprite(position, texture)
     // close lua
     lua_close(L);
 
+    // set default state to idle
+    mState = PlayerState::STATE_MOVE;
+
     // pugi::xml_document doc;
     // pugi::xml_parse_result result = doc.load_file("xml/anim.xml");
     // std::cout << "parse result: " << result.description() << "\n";
@@ -134,8 +137,6 @@ Player::Player(Vector2 position, Texture texture) : Sprite(position, texture)
     attackWest->AddKeyFrame({ 64, 224, 32, 32 }, 2);
     attackWest->AddKeyFrame({ 96, 224, 32, 32 }, 3);
     mAnimations.insert({ "attack_west", attackWest });
-
-    mCurrentAnimation = "idle_south";
 }
 
 Player::~Player()
@@ -181,41 +182,46 @@ void Player::Attack()
 
 void Player::Update(float deltaTime)
 {
-    if (mDirection != Vector2::Zero()) {
-        mDirection.Normalize();
+    switch(mState) {
+    case PlayerState::STATE_MOVE:
+        // select animation based on direction
+        if (mDirection != Vector2::Zero()) {
+            mDirection.Normalize();
+            switch(mFacingDirection) {
+            case FacingDirection::FACING_SOUTH: mCurrentAnimation = "walk_south"; break;
+            case FacingDirection::FACING_EAST:  mCurrentAnimation = "walk_east"; break;
+            case FacingDirection::FACING_NORTH: mCurrentAnimation = "walk_north"; break;
+            case FacingDirection::FACING_WEST:  mCurrentAnimation = "walk_west"; break;
+            }
+        } else {
+            switch(mFacingDirection) {
+            case FacingDirection::FACING_SOUTH: mCurrentAnimation = "idle_south"; break;
+            case FacingDirection::FACING_EAST:  mCurrentAnimation = "idle_east"; break;
+            case FacingDirection::FACING_NORTH: mCurrentAnimation = "idle_north"; break;
+            case FacingDirection::FACING_WEST:  mCurrentAnimation = "idle_west"; break;
+            }
+        }
+
+        // apply speed and friction
+        mAcceleration = mDirection * mSpeed;
+        mAcceleration -= mVelocity * mFriction;
+
+        // calculate new position and velocity from acceleration
+        mPosition += mVelocity * deltaTime + mAcceleration * 0.5f * deltaTime * deltaTime;
+        mVelocity += mAcceleration * deltaTime;
+
+        // reset direction
+        mDirection = Vector2::Zero();
+
+        break;
     }
 
-    // apply speed and friction
-    mAcceleration = mDirection * mSpeed;
-    mAcceleration -= mVelocity * mFriction;
-
-    // calculate new position and velocity from acceleration
-    mPosition += mVelocity * deltaTime + mAcceleration * 0.5f * deltaTime * deltaTime;
-    mVelocity += mAcceleration * deltaTime;
-
-    // reset direction
-    mDirection = Vector2::Zero();
-
-    mAnimations[mCurrentAnimation]->Update(deltaTime);
+    //std::cout << "current anim: " << mCurrentAnimation << "\n";
+    mAnimations[mCurrentAnimation]->Update(deltaTime);    
 }
 
 void Player::Draw(Renderer& renderer)
 {
-    
-    // switch(mFacingDirection) {
-    // case FacingDirection::FACING_SOUTH: renderer.DrawPartialSprite(mPosition.x, mPosition.y, 0, 0,  16, 32, mTexture); break;
-    // case FacingDirection::FACING_EAST:  renderer.DrawPartialSprite(mPosition.x, mPosition.y, 32, 192, 32, 32, mTexture); break;
-    // case FacingDirection::FACING_NORTH: renderer.DrawPartialSprite(mPosition.x, mPosition.y, 0, 64, 16, 32, mTexture); break;
-    // case FacingDirection::FACING_WEST:  renderer.DrawPartialSprite(mPosition.x, mPosition.y, 0, 96, 16, 32, mTexture); break;
-    // }
-
-    switch(mFacingDirection) {
-    case FacingDirection::FACING_SOUTH: mCurrentAnimation = "walk_south"; break;
-    case FacingDirection::FACING_EAST:  mCurrentAnimation = "walk_east"; break;
-    case FacingDirection::FACING_NORTH: mCurrentAnimation = "walk_north"; break;
-    case FacingDirection::FACING_WEST:  mCurrentAnimation = "walk_west"; break;
-    }
-
     mAnimations[mCurrentAnimation]->DrawCurrentFrame(renderer, mPosition, mTexture);
 }
 
