@@ -29,8 +29,19 @@ public:
 
     // getters
     int Damage() const { return 20; }
-    AABB HitBox() const { return AABB(mPosition, Vector2(10.0f, 10.0f)); }
-    AABB AttackHitBox() const { return AABB(mPosition, Vector2(32.0f, 32.0f)); }
+    AABB HitBox() const { return AABB(mPosition, Vector2(8.0f, 10.0f)); }
+    AABB AttackHitBox() const
+    {
+        AABB attackHitbox;
+        float attackDist = 8.0f;
+        switch (mFacingDirection) {
+        case FacingDirection::FACING_SOUTH: attackHitbox = AABB(Vector2(mPosition.x + 0.0f, mPosition.y + attackDist), Vector2(12.0f, 10.0f)); break;
+        case FacingDirection::FACING_EAST:  attackHitbox = AABB(Vector2(mPosition.x + attackDist, mPosition.y + 0.0f), Vector2(10.0f, 12.0f)); break;
+        case FacingDirection::FACING_NORTH: attackHitbox = AABB(Vector2(mPosition.x + 0.0f, mPosition.y - attackDist), Vector2(12.0f, 10.0f)); break;
+        case FacingDirection::FACING_WEST:  attackHitbox = AABB(Vector2(mPosition.x - attackDist, mPosition.y + 0.0f), Vector2(10.0f, 12.0f)); break;
+        }
+        return attackHitbox;
+    }
 
     // setters
     void SetDirectionX(float directionX) { mDirection.x = directionX; }

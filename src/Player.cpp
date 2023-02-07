@@ -237,6 +237,7 @@ void Player::Draw(Renderer& renderer)
     
     // draw hitbox for debug
     HitBox().Draw(renderer);
+    AttackHitBox().Draw(renderer);
 }
 
 void Player::DrawHealthbar(Renderer& renderer)
