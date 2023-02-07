@@ -6,6 +6,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#include "TextureManager.h"
+
 Renderer::~Renderer()
 {
     std::cout << "Cleaning up renderer...\n";
@@ -451,12 +453,12 @@ void Renderer::DrawRectangle(float x, float y, int w, int h, float r, float g, f
     glUseProgram(mShader);
 
     // bind
-    glBindTexture(GL_TEXTURE_2D, 1);
+    glBindTexture(GL_TEXTURE_2D, TextureManager::Instance().GetTexture("default").id);
     glBindVertexArray(mQuadVao);
 
     // set up model matrix
     glm::mat4 model = glm::mat4(1.f);
-    model = glm::translate(model, glm::vec3(x * mTileSize, y * mTileSize, 0.f));
+    model = glm::translate(model, glm::vec3(x, y, 0.f));
     model = glm::scale(model, glm::vec3(w, h, 1.f)); 
 
     // set uniforms

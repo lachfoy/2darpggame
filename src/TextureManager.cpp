@@ -8,14 +8,20 @@
 TextureManager::TextureManager()
 {
     // generate a default, single pixel, white texture
-    GLuint defaultTexture;
     unsigned char* data = new unsigned char[3] { 0xff, 0xff, 0xff };
     
-    // create texture
-    glGenTextures(1, &defaultTexture);
-    glBindTexture(GL_TEXTURE_2D, defaultTexture);
+    Texture texture;
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    texture.w = 1;
+    texture.h = 1;
+
+    // create texture
+    glGenTextures(1, &texture.id);
+    glBindTexture(GL_TEXTURE_2D, texture.id);
+
+    std::cout << "TextureManager:: default texture: " << texture.id << "\n";
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.w, texture.h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     
     // set texture wrap and filter modes
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -28,13 +34,13 @@ TextureManager::TextureManager()
 
     // free data
     delete[] data;
+
+    mTextures.insert({ "default", texture });
 }
 
 TextureManager::~TextureManager()
 {
     std::cout << "TextureManager:: Destructor called!\n";
-
-    glDeleteTextures(1, 0); // delete default texture
 
     // clear textures
     for (auto& it: mTextures) {
@@ -72,9 +78,9 @@ void TextureManager::LoadTexture(const char* path)
 
     // technically every texture should be 32bpp but if not...
     if (nChannels == 3) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.w, texture.h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     } else {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); // alpha channel
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.w, texture.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); // alpha channel
     }
     
     // set texture wrap and filter modes
