@@ -161,7 +161,7 @@ void Game::Update(float deltaTime)
         mPlayer->SetFacingDirection(FacingDirection::FACING_EAST);
     }
     if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
-        mPlayer->Attack();
+        mPlayer->SetState(PlayerState::STATE_ATTACK);
     }
 
     mPlayer->Update(deltaTime);
@@ -177,7 +177,6 @@ void Game::Update(float deltaTime)
 
     // "housekeeping"
     EnemyManager::Instance().HousekeepEnemies();
-
 }
 
 void Game::Draw()

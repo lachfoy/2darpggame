@@ -184,21 +184,21 @@ void Player::Update(float deltaTime)
 {
     switch(mState) {
     case PlayerState::STATE_MOVE:
-        // select animation based on direction
-        if (mDirection != Vector2::Zero()) {
+        // select animation based on direction - has the player pressed a movement key?
+        if (mDirection == Vector2::Zero()) {
+            switch(mFacingDirection) {
+            case FacingDirection::FACING_SOUTH: mCurrentAnimation = "idle_south"; break;
+            case FacingDirection::FACING_EAST:  mCurrentAnimation = "idle_east"; break;
+            case FacingDirection::FACING_NORTH: mCurrentAnimation = "idle_north"; break;
+            case FacingDirection::FACING_WEST:  mCurrentAnimation = "idle_west"; break;
+            }
+        } else {
             mDirection.Normalize();
             switch(mFacingDirection) {
             case FacingDirection::FACING_SOUTH: mCurrentAnimation = "walk_south"; break;
             case FacingDirection::FACING_EAST:  mCurrentAnimation = "walk_east"; break;
             case FacingDirection::FACING_NORTH: mCurrentAnimation = "walk_north"; break;
             case FacingDirection::FACING_WEST:  mCurrentAnimation = "walk_west"; break;
-            }
-        } else {
-            switch(mFacingDirection) {
-            case FacingDirection::FACING_SOUTH: mCurrentAnimation = "idle_south"; break;
-            case FacingDirection::FACING_EAST:  mCurrentAnimation = "idle_east"; break;
-            case FacingDirection::FACING_NORTH: mCurrentAnimation = "idle_north"; break;
-            case FacingDirection::FACING_WEST:  mCurrentAnimation = "idle_west"; break;
             }
         }
 
@@ -214,6 +214,17 @@ void Player::Update(float deltaTime)
         mDirection = Vector2::Zero();
 
         break;
+    case PlayerState::STATE_ATTACK:
+        switch(mFacingDirection) {
+            case FacingDirection::FACING_SOUTH: mCurrentAnimation = "attack_south"; break;
+            case FacingDirection::FACING_EAST:  mCurrentAnimation = "attack_east"; break;
+            case FacingDirection::FACING_NORTH: mCurrentAnimation = "attack_north"; break;
+            case FacingDirection::FACING_WEST:  mCurrentAnimation = "attack_west"; break;
+        }
+
+        EnemyManager::Instance().HandlePlayerAttack(*this);
+
+        break;
     }
 
     //std::cout << "current anim: " << mCurrentAnimation << "\n";
@@ -223,6 +234,9 @@ void Player::Update(float deltaTime)
 void Player::Draw(Renderer& renderer)
 {
     mAnimations[mCurrentAnimation]->DrawCurrentFrame(renderer, mPosition, mTexture);
+    
+    // draw hitbox for debug
+    HitBox().Draw(renderer);
 }
 
 void Player::DrawHealthbar(Renderer& renderer)

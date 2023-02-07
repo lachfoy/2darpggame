@@ -2,6 +2,7 @@
 #define AABB_H_
 
 #include "Vector2.h"
+#include "Renderer.h"
 
 class AABB
 {
@@ -15,6 +16,7 @@ public:
 
     bool Intersects(Vector2 other);
     bool Intersects(const AABB& other);
+    void Draw(Renderer& renderer);
 
     Vector2 mMin;
     Vector2 mMax;

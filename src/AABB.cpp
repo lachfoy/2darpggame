@@ -30,3 +30,10 @@ bool AABB::Intersects(const AABB& other)
     );
 }
 
+void AABB::Draw(Renderer& renderer)
+{
+    float w = abs(mMax.x - mMin.x);
+    float h = abs(mMax.y - mMin.y);
+    renderer.DrawRectangle(mMin.x, mMin.y, w, h, 1.0f, 0.0f, 0.0f, 0.5f);
+}
+
