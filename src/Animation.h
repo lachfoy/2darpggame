@@ -8,18 +8,22 @@
 
 class Animation {
 public:
-    Animation(int numKeyFrames);
+    Animation(int numKeyFrames, bool startPlaying, bool looping);
     ~Animation();
 
+    bool Playing() const { return mPlaying; }
+
     // methods
+    void Reset() { int mCurrentFrame = 0; mPlaying = true; }
     void AddKeyFrame(AnimationKeyFrame keyFrame, int idx) { mKeyFrames[idx] = keyFrame; }
     void Update(float deltaTime);
     void DrawCurrentFrame(Renderer& renderer, Vector2 position, Texture texture);
 
 private:
-    bool mPlaying = true;
-    int mCurrentFrame = 0;
     int mNumKeyFrames;
+    bool mPlaying;
+    bool mLooping;
+    int mCurrentFrame = 0;
     AnimationKeyFrame* mKeyFrames;
     float mCurrentTime = 0.0f;
 

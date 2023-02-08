@@ -1,6 +1,6 @@
 #include "Animation.h"
 
-Animation::Animation(int numKeyFrames) : mNumKeyFrames(numKeyFrames)
+Animation::Animation(int numKeyFrames, bool startPlaying, bool looping) : mNumKeyFrames(numKeyFrames), mPlaying(startPlaying), mLooping(looping)
 {
     mKeyFrames = new AnimationKeyFrame[numKeyFrames];
 }
@@ -16,7 +16,15 @@ void Animation::Update(float deltaTime) {
         mCurrentTime += deltaTime;
     } else {
         mCurrentTime = 0.0f;
-        mCurrentFrame = mCurrentFrame == mNumKeyFrames - 1 ? 0 : mCurrentFrame + 1;
+
+        if ((mCurrentFrame + 1) == mNumKeyFrames) {
+            mCurrentFrame = 0;
+            if (!mLooping) {
+                mPlaying = false;
+            }
+        } else {
+            mCurrentFrame++;
+        }
     }
 }
 

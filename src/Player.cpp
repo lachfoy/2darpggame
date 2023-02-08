@@ -64,45 +64,45 @@ Player::Player(Vector2 position, Texture texture) : Sprite(position, texture)
 
     // COMPLETELY hardcode animations
     // idle
-    Animation* idleSouth = new Animation(1);
+    Animation* idleSouth = new Animation(1, false, false);
     idleSouth->AddKeyFrame({ 0, 0, 16, 32 }, 0);
     mAnimations.insert({ "idle_south", idleSouth });
 
-    Animation* idleEast = new Animation(1);
+    Animation* idleEast = new Animation(1, false, false);
     idleEast->AddKeyFrame({ 0, 32, 16, 32 }, 0);
     mAnimations.insert({ "idle_east", idleEast });
 
-    Animation* idleNorth = new Animation(1);
+    Animation* idleNorth = new Animation(1, false, false);
     idleNorth->AddKeyFrame({ 0, 64, 16, 32 }, 0);
     mAnimations.insert({ "idle_north", idleNorth });
 
-    Animation* idleWest = new Animation(1);
+    Animation* idleWest = new Animation(1, false, false);
     idleWest->AddKeyFrame({ 0, 96, 16, 32 }, 0);
     mAnimations.insert({ "idle_west", idleWest });
 
     // walking
-    Animation* walkSouth = new Animation(4);
+    Animation* walkSouth = new Animation(4, true, true);
     walkSouth->AddKeyFrame({ 0,  0, 16, 32 }, 0);
     walkSouth->AddKeyFrame({ 16, 0, 16, 32 }, 1);
     walkSouth->AddKeyFrame({ 32, 0, 16, 32 }, 2);
     walkSouth->AddKeyFrame({ 48, 0, 16, 32 }, 3);
     mAnimations.insert({ "walk_south", walkSouth });
 
-    Animation* walkEast = new Animation(4);
+    Animation* walkEast = new Animation(4, true, true);
     walkEast->AddKeyFrame({ 0,  32, 16, 32 }, 0);
     walkEast->AddKeyFrame({ 16, 32, 16, 32 }, 1);
     walkEast->AddKeyFrame({ 32, 32, 16, 32 }, 2);
     walkEast->AddKeyFrame({ 48, 32, 16, 32 }, 3);
     mAnimations.insert({ "walk_east", walkEast });
 
-    Animation* walkNorth = new Animation(4);
+    Animation* walkNorth = new Animation(4, true, true);
     walkNorth->AddKeyFrame({ 0,  64, 16, 32 }, 0);
     walkNorth->AddKeyFrame({ 16, 64, 16, 32 }, 1);
     walkNorth->AddKeyFrame({ 32, 64, 16, 32 }, 2);
     walkNorth->AddKeyFrame({ 48, 64, 16, 32 }, 3);
     mAnimations.insert({ "walk_north", walkNorth });
 
-    Animation* walkWest = new Animation(4);
+    Animation* walkWest = new Animation(4, true, true);
     walkWest->AddKeyFrame({ 0,  96, 16, 32 }, 0);
     walkWest->AddKeyFrame({ 16, 96, 16, 32 }, 1);
     walkWest->AddKeyFrame({ 32, 96, 16, 32 }, 2);
@@ -110,28 +110,28 @@ Player::Player(Vector2 position, Texture texture) : Sprite(position, texture)
     mAnimations.insert({ "walk_west", walkWest });
 
     // attacking
-    Animation* attackSouth = new Animation(4);
+    Animation* attackSouth = new Animation(4, true, false);
     attackSouth->AddKeyFrame({ 0,  128, 32, 32 }, 0);
     attackSouth->AddKeyFrame({ 32, 128, 32, 32 }, 1);
     attackSouth->AddKeyFrame({ 64, 128, 32, 32 }, 2);
     attackSouth->AddKeyFrame({ 96, 128, 32, 32 }, 3);
     mAnimations.insert({ "attack_south", attackSouth });
 
-    Animation* attackNorth = new Animation(4);
+    Animation* attackNorth = new Animation(4, true, false);
     attackNorth->AddKeyFrame({ 0,  160, 32, 32 }, 0);
     attackNorth->AddKeyFrame({ 32, 160, 32, 32 }, 1);
     attackNorth->AddKeyFrame({ 64, 160, 32, 32 }, 2);
     attackNorth->AddKeyFrame({ 96, 160, 32, 32 }, 3);
     mAnimations.insert({ "attack_north", attackNorth });
 
-    Animation* attackEast = new Animation(4);
+    Animation* attackEast = new Animation(4, true, false);
     attackEast->AddKeyFrame({ 0,  192, 32, 32 }, 0);
     attackEast->AddKeyFrame({ 32, 192, 32, 32 }, 1);
     attackEast->AddKeyFrame({ 64, 192, 32, 32 }, 2);
     attackEast->AddKeyFrame({ 96, 192, 32, 32 }, 3);
     mAnimations.insert({ "attack_east", attackEast });
 
-    Animation* attackWest = new Animation(4);
+    Animation* attackWest = new Animation(4, true, false);
     attackWest->AddKeyFrame({ 0,  224, 32, 32 }, 0);
     attackWest->AddKeyFrame({ 32, 224, 32, 32 }, 1);
     attackWest->AddKeyFrame({ 64, 224, 32, 32 }, 2);
@@ -213,6 +213,8 @@ void Player::Update(float deltaTime)
         // reset direction
         mDirection = Vector2::Zero();
 
+        mAnimations[mCurrentAnimation]->Update(deltaTime);
+
         break;
     case PlayerState::STATE_ATTACK:
         switch(mFacingDirection) {
@@ -224,11 +226,15 @@ void Player::Update(float deltaTime)
 
         EnemyManager::Instance().HandlePlayerAttack(*this);
 
+        mAnimations[mCurrentAnimation]->Update(deltaTime);
+
+        if (!mAnimations[mCurrentAnimation]->Playing()) { // animation is finished
+            mAnimations[mCurrentAnimation]->Reset();
+            mState = PlayerState::STATE_MOVE;
+        }
+
         break;
     }
-
-    //std::cout << "current anim: " << mCurrentAnimation << "\n";
-    mAnimations[mCurrentAnimation]->Update(deltaTime);    
 }
 
 void Player::Draw(Renderer& renderer)
@@ -236,8 +242,8 @@ void Player::Draw(Renderer& renderer)
     mAnimations[mCurrentAnimation]->DrawCurrentFrame(renderer, mPosition, mTexture);
     
     // draw hitbox for debug
-    HitBox().Draw(renderer);
-    AttackHitBox().Draw(renderer);
+    // HitBox().Draw(renderer);
+    // AttackHitBox().Draw(renderer);
 }
 
 void Player::DrawHealthbar(Renderer& renderer)
