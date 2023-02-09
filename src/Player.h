@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <pugixml.hpp>
 #include "PlayerState.h"
+#include "Input.h"
 
 enum class FacingDirection
 {
@@ -35,10 +36,10 @@ public:
         AABB attackHitbox;
         float attackDist = 8.0f;
         switch (mFacingDirection) {
-        case FacingDirection::FACING_SOUTH: attackHitbox = AABB(Vector2(mPosition.x + 0.0f, mPosition.y + attackDist), Vector2(12.0f, 10.0f)); break;
-        case FacingDirection::FACING_EAST:  attackHitbox = AABB(Vector2(mPosition.x + attackDist, mPosition.y + 0.0f), Vector2(10.0f, 12.0f)); break;
-        case FacingDirection::FACING_NORTH: attackHitbox = AABB(Vector2(mPosition.x + 0.0f, mPosition.y - attackDist), Vector2(12.0f, 10.0f)); break;
-        case FacingDirection::FACING_WEST:  attackHitbox = AABB(Vector2(mPosition.x - attackDist, mPosition.y + 0.0f), Vector2(10.0f, 12.0f)); break;
+            case FacingDirection::FACING_SOUTH: attackHitbox = AABB(Vector2(mPosition.x + 0.0f, mPosition.y + attackDist), Vector2(12.0f, 10.0f)); break;
+            case FacingDirection::FACING_EAST:  attackHitbox = AABB(Vector2(mPosition.x + attackDist, mPosition.y + 0.0f), Vector2(10.0f, 12.0f)); break;
+            case FacingDirection::FACING_NORTH: attackHitbox = AABB(Vector2(mPosition.x + 0.0f, mPosition.y - attackDist), Vector2(12.0f, 10.0f)); break;
+            case FacingDirection::FACING_WEST:  attackHitbox = AABB(Vector2(mPosition.x - attackDist, mPosition.y + 0.0f), Vector2(10.0f, 12.0f)); break;
         }
         return attackHitbox;
     }
@@ -54,6 +55,7 @@ public:
     void Heal(int amount);
     void AddObserver(Observer* observer) { mObservers[mNumObservers] = observer; mNumObservers++; }
     void Attack();
+    void HandleInput(Input& input);
     void Update(float deltaTime);
     void Draw(Renderer& renderer) override;
     void DrawHealthbar(Renderer& renderer);

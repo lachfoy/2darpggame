@@ -180,6 +180,36 @@ void Player::Attack()
     EnemyManager::Instance().HandlePlayerAttack(*this);
 }
 
+void Player::HandleInput(Input& input)
+{
+    switch(mState) {
+        case PlayerState::STATE_MOVE:
+            // movement
+            if (input.IsKeyHeld(SDL_SCANCODE_W) || input.IsKeyHeld(SDL_SCANCODE_UP)) {
+                mDirection.y = -1.0f;
+                mFacingDirection = FacingDirection::FACING_NORTH;
+            }
+            if (input.IsKeyHeld(SDL_SCANCODE_A) || input.IsKeyHeld(SDL_SCANCODE_LEFT)) {
+                mDirection.x = -1.0f;
+                mFacingDirection = FacingDirection::FACING_WEST;
+            }
+            if (input.IsKeyHeld(SDL_SCANCODE_S) || input.IsKeyHeld(SDL_SCANCODE_DOWN)) {
+                mDirection.y = 1.0f;
+                mFacingDirection = FacingDirection::FACING_SOUTH;
+            }
+            if (input.IsKeyHeld(SDL_SCANCODE_D) || input.IsKeyHeld(SDL_SCANCODE_RIGHT)) {
+                mDirection.x = 1.0f;
+                mFacingDirection = FacingDirection::FACING_EAST;
+            }
+
+            // attacking
+            if (input.IsKeyPressed(SDL_SCANCODE_SPACE)) {
+                mState = PlayerState::STATE_ATTACK;
+            }
+        break;
+    }
+}
+
 void Player::Update(float deltaTime)
 {
     switch(mState) {
@@ -187,18 +217,18 @@ void Player::Update(float deltaTime)
         // select animation based on direction - has the player pressed a movement key?
         if (mDirection == Vector2::Zero()) {
             switch(mFacingDirection) {
-            case FacingDirection::FACING_SOUTH: mCurrentAnimation = "idle_south"; break;
-            case FacingDirection::FACING_EAST:  mCurrentAnimation = "idle_east"; break;
-            case FacingDirection::FACING_NORTH: mCurrentAnimation = "idle_north"; break;
-            case FacingDirection::FACING_WEST:  mCurrentAnimation = "idle_west"; break;
+                case FacingDirection::FACING_SOUTH: mCurrentAnimation = "idle_south"; break;
+                case FacingDirection::FACING_EAST:  mCurrentAnimation = "idle_east"; break;
+                case FacingDirection::FACING_NORTH: mCurrentAnimation = "idle_north"; break;
+                case FacingDirection::FACING_WEST:  mCurrentAnimation = "idle_west"; break;
             }
         } else {
             mDirection.Normalize();
             switch(mFacingDirection) {
-            case FacingDirection::FACING_SOUTH: mCurrentAnimation = "walk_south"; break;
-            case FacingDirection::FACING_EAST:  mCurrentAnimation = "walk_east"; break;
-            case FacingDirection::FACING_NORTH: mCurrentAnimation = "walk_north"; break;
-            case FacingDirection::FACING_WEST:  mCurrentAnimation = "walk_west"; break;
+                case FacingDirection::FACING_SOUTH: mCurrentAnimation = "walk_south"; break;
+                case FacingDirection::FACING_EAST:  mCurrentAnimation = "walk_east"; break;
+                case FacingDirection::FACING_NORTH: mCurrentAnimation = "walk_north"; break;
+                case FacingDirection::FACING_WEST:  mCurrentAnimation = "walk_west"; break;
             }
         }
 
@@ -209,9 +239,6 @@ void Player::Update(float deltaTime)
         // calculate new position and velocity from acceleration
         mPosition += mVelocity * deltaTime + mAcceleration * 0.5f * deltaTime * deltaTime;
         mVelocity += mAcceleration * deltaTime;
-
-        // reset direction
-        mDirection = Vector2::Zero();
 
         mAnimations[mCurrentAnimation]->Update(deltaTime);
 
@@ -226,6 +253,9 @@ void Player::Update(float deltaTime)
 
         EnemyManager::Instance().HandlePlayerAttack(*this);
 
+        mVelocity = Vector2::Zero();
+        mAcceleration = Vector2::Zero();
+
         mAnimations[mCurrentAnimation]->Update(deltaTime);
 
         if (!mAnimations[mCurrentAnimation]->Playing()) { // animation is finished
@@ -235,6 +265,11 @@ void Player::Update(float deltaTime)
 
         break;
     }
+    
+    // reset direction
+    mDirection = Vector2::Zero();
+
+    std::cout << mAcceleration.Length() << "\n";
 }
 
 void Player::Draw(Renderer& renderer)

@@ -41,12 +41,14 @@ public:
 
 private:
     void Create();
+    void HandleInput();
     void Update(float deltaTime);
     void Draw();
     void Destroy();
     
     SDL_Window* mWindow;
     SDL_GLContext mContext;
+    bool mRunning = true;
 
     lua_State *L;
 

@@ -69,18 +69,16 @@ void Game::Run()
     Uint32 lastTime = 0;
 
     SDL_Event event;
-    bool running = true;
 
     // main loop
-    while (running) {
+    while (mRunning) {
         // handle input events
         while (SDL_PollEvent(&event) != 0) {
             switch(event.type) {
             case SDL_QUIT:
-                running = false;
+                mRunning = false;
                 break;
             case SDL_KEYDOWN:
-                if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) running = false; //esc quit
                 mInput.SetKeyDown(event.key.keysym.scancode);
                 break;
             case SDL_KEYUP:
@@ -89,6 +87,11 @@ void Game::Run()
             }
         }
 
+        HandleInput();
+
+        // update input
+        mInput.UpdateInput();
+
         // calculate delta time
         Uint32 currentTime = SDL_GetTicks();
 		float deltaTime = (currentTime - lastTime) / 1000.0f;
@@ -96,9 +99,6 @@ void Game::Run()
 
         // update
         Update(deltaTime);
-
-        // update input
-        mInput.UpdateInput();
 
         // draw
         Draw();
@@ -141,29 +141,17 @@ void Game::Create()
     }
 }
 
+void Game::HandleInput()
+{
+    if (mInput.IsKeyPressed(SDL_SCANCODE_ESCAPE)) mRunning = false; //esc quit
+
+    mPlayer->HandleInput(mInput);
+}
+
 void Game::Update(float deltaTime)
 {
-    // player movement
-    if (mInput.IsKeyHeld(SDL_SCANCODE_W) || mInput.IsKeyHeld(SDL_SCANCODE_UP)) {
-        mPlayer->SetDirectionY(-1.0f);
-        mPlayer->SetFacingDirection(FacingDirection::FACING_NORTH);
-    }
-    if (mInput.IsKeyHeld(SDL_SCANCODE_A) || mInput.IsKeyHeld(SDL_SCANCODE_LEFT)) {
-        mPlayer->SetDirectionX(-1.0f);
-        mPlayer->SetFacingDirection(FacingDirection::FACING_WEST);
-    }
-    if (mInput.IsKeyHeld(SDL_SCANCODE_S) || mInput.IsKeyHeld(SDL_SCANCODE_DOWN)) {
-        mPlayer->SetDirectionY(1.0f);
-        mPlayer->SetFacingDirection(FacingDirection::FACING_SOUTH);
-    }
-    if (mInput.IsKeyHeld(SDL_SCANCODE_D) || mInput.IsKeyHeld(SDL_SCANCODE_RIGHT)) {
-        mPlayer->SetDirectionX(1.0f);
-        mPlayer->SetFacingDirection(FacingDirection::FACING_EAST);
-    }
-    if (mInput.IsKeyPressed(SDL_SCANCODE_SPACE)) {
-        mPlayer->SetState(PlayerState::STATE_ATTACK);
-    }
 
+    
     mPlayer->Update(deltaTime);
 
     mRenderer.SetCameraPosition(mPlayer->Position().x, mPlayer->Position().y);
