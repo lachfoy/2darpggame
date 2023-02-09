@@ -33,8 +33,7 @@ void EnemyManager::HandlePlayerAttack(const Player& player)
     for (const auto& enemy : mEnemies) {
         if (player.AttackHitBox().Intersects(enemy->HitBox())) {
             std::cout << "EnemyManager:: player attack hit an enemy\n";
-            Vector2 impulse = (enemy->Position() - player.Position());
-            impulse.Normalize();
+            Vector2 impulse = (enemy->Position() - player.Position()).Normalize();
             impulse *= 320.0f;
             enemy->AddVelocity(impulse);
         }

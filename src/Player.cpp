@@ -232,14 +232,6 @@ void Player::Update(float deltaTime)
             }
         }
 
-        // apply speed and friction
-        mAcceleration = mDirection * mSpeed;
-        mAcceleration -= mVelocity * mFriction;
-
-        // calculate new position and velocity from acceleration
-        mPosition += mVelocity * deltaTime + mAcceleration * 0.5f * deltaTime * deltaTime;
-        mVelocity += mAcceleration * deltaTime;
-
         mAnimations[mCurrentAnimation]->Update(deltaTime);
 
         break;
@@ -253,9 +245,6 @@ void Player::Update(float deltaTime)
 
         EnemyManager::Instance().HandlePlayerAttack(*this);
 
-        mVelocity = Vector2::Zero();
-        mAcceleration = Vector2::Zero();
-
         mAnimations[mCurrentAnimation]->Update(deltaTime);
 
         if (!mAnimations[mCurrentAnimation]->Playing()) { // animation is finished
@@ -265,6 +254,14 @@ void Player::Update(float deltaTime)
 
         break;
     }
+
+    // apply speed and friction
+    mAcceleration = mDirection * mSpeed;
+    mAcceleration -= mVelocity * mFriction;
+
+    // calculate new position and velocity from acceleration
+    mPosition += mVelocity * deltaTime + mAcceleration * 0.5f * deltaTime * deltaTime;
+    mVelocity += mAcceleration * deltaTime;
     
     // reset direction
     mDirection = Vector2::Zero();
@@ -275,8 +272,8 @@ void Player::Draw(Renderer& renderer)
     mAnimations[mCurrentAnimation]->DrawCurrentFrame(renderer, mPosition, mTexture);
     
     // draw hitbox for debug
-    // HitBox().Draw(renderer);
-    // AttackHitBox().Draw(renderer);
+    HitBox().Draw(renderer);
+    if (mState == PlayerState::STATE_ATTACK) AttackHitBox().Draw(renderer);
 }
 
 void Player::DrawHealthbar(Renderer& renderer)

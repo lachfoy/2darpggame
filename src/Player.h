@@ -29,6 +29,7 @@ public:
     ~Player();
 
     // getters
+    Vector2 Direction() const { return mDirection; }
     int Damage() const { return 20; }
     AABB HitBox() const { return AABB(mPosition, Vector2(8.0f, 10.0f)); }
     AABB AttackHitBox() const

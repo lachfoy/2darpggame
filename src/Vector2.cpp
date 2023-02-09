@@ -17,9 +17,10 @@ float Vector2::Length()
     return sqrt(x * x + y * y);
 }
 
-void Vector2::Normalize()
+Vector2 Vector2::Normalize()
 {
     float length = Length();
     x /= length;
     y /= length;
+    return *this;
 }

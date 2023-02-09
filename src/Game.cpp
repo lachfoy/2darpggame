@@ -195,7 +195,7 @@ void Game::Draw()
     glClear(GL_COLOR_BUFFER_BIT);
     mMap->DrawMap(mRenderer);   
 
-    //EnemyManager::Instance().DrawEnemies(mRenderer);
+    EnemyManager::Instance().DrawEnemies(mRenderer);
     // EnemyManager::Instance().DrawEnemyHealthbars(mRenderer);
 
     mPlayer->Draw(mRenderer);

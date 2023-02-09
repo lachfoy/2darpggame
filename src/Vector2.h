@@ -25,7 +25,7 @@ struct Vector2
     static Vector2 Zero() { return Vector2(0.0f, 0.0f); }
 
     // methods
-    void Normalize();
+    Vector2 Normalize();
 
     float x;
     float y;
