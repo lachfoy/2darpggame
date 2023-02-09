@@ -14,7 +14,7 @@ public:
     bool Playing() const { return mPlaying; }
 
     // methods
-    void Reset() { int mCurrentFrame = 0; mPlaying = true; }
+    void Reset() { mCurrentFrame = 0; mPlaying = true; }
     void AddKeyFrame(AnimationKeyFrame keyFrame, int idx) { mKeyFrames[idx] = keyFrame; }
     void Update(float deltaTime);
     void DrawCurrentFrame(Renderer& renderer, Vector2 position, Texture texture);

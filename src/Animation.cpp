@@ -16,12 +16,11 @@ void Animation::Update(float deltaTime) {
         mCurrentTime += deltaTime;
     } else {
         mCurrentTime = 0.0f;
-
-        if ((mCurrentFrame + 1) == mNumKeyFrames) {
-            mCurrentFrame = 0;
-            if (!mLooping) {
+        if (mCurrentFrame == mNumKeyFrames - 1) {
+            if (mLooping)
+                mCurrentFrame = 0;
+            else
                 mPlaying = false;
-            }
         } else {
             mCurrentFrame++;
         }

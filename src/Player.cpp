@@ -268,8 +268,6 @@ void Player::Update(float deltaTime)
     
     // reset direction
     mDirection = Vector2::Zero();
-
-    std::cout << mAcceleration.Length() << "\n";
 }
 
 void Player::Draw(Renderer& renderer)

@@ -13,3 +13,7 @@ So...
 - Dead state: needed if there is some death animation or somesuch thing.
 
 Default to Idle state. Check if player is in range at fixed intervals, if player IS in range, switch state to Move state.
+
+other libs
+OpenAL
+miniz datacompression

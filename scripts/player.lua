@@ -54,7 +54,3 @@ anim = {
         { x=96, y=224, w=32, h=32, duration=3 }
     }
 }
-
-print(anim[1])
-
-for i=1,#anim.walk_south do print(anim.walk_south[i].duration) end

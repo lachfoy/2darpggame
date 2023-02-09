@@ -4,6 +4,9 @@
 #include <iostream>
 #include <cmath> // floor
 
+#include <AL/al.h>
+#include <AL/alc.h>
+
 bool Game::Init()
 {
     // initialize SDL video
@@ -58,6 +61,26 @@ bool Game::Init()
 
     // wireframe
     //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+    // Open AL
+    const ALCchar *name;
+    ALCdevice *device;
+    ALCcontext *ctx;
+
+    device = NULL;
+
+    device = alcOpenDevice(NULL);
+    if (!device) std::cout << "Could not open AL device\n";
+
+    ctx = alcCreateContext(device, NULL);
+
+    name = alcGetString(device, ALC_DEVICE_SPECIFIER);
+
+    std::cout << "Audio:: Opened " << name << "\n";
+
+    alcMakeContextCurrent(NULL);
+    alcDestroyContext(ctx);
+    alcCloseDevice(device);
 
     return true;
 }
