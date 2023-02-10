@@ -29,7 +29,6 @@ public:
     ~Player();
 
     // getters
-    Vector2 Direction() const { return mDirection; }
     int Damage() const { return 20; }
     AABB HitBox() const { return AABB(mPosition, Vector2(8.0f, 10.0f)); }
     AABB AttackHitBox() const
@@ -43,6 +42,7 @@ public:
             case FacingDirection::FACING_WEST:  attackHitbox = AABB(Vector2(mPosition.x - attackDist, mPosition.y + 0.0f), Vector2(10.0f, 12.0f)); break;
         }
         return attackHitbox;
+        //return AABB(Vector2(mPosition.x + mFacingDirection2.x * attackDist, mPosition.y + mFacingDirection2.y * attackDist), Vector2(10.0f, 10.0f));
     }
 
     // setters
@@ -72,6 +72,7 @@ private:
 
     PlayerState mState;
     FacingDirection mFacingDirection = FacingDirection::FACING_SOUTH;
+    Vector2 mFacingDirection2;
     std::string mCurrentAnimation;
     std::map<std::string, Animation*> mAnimations;
 

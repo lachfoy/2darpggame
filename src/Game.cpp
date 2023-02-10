@@ -136,10 +136,6 @@ void Game::Create()
     mRenderer.InitShaders();
     mRenderer.InitQuadVertexData();
     mRenderer.InitPartialVbo();
-    mRenderer.InitTextData();
-
-    // load required fonts
-    mRenderer.LoadFont("fonts/arial.ttf", 16);
 
     // test map generator
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
@@ -173,8 +169,6 @@ void Game::HandleInput()
 
 void Game::Update(float deltaTime)
 {
-
-    
     mPlayer->Update(deltaTime);
 
     mRenderer.SetCameraPosition(mPlayer->Position().x, mPlayer->Position().y);
@@ -199,8 +193,6 @@ void Game::Draw()
     // EnemyManager::Instance().DrawEnemyHealthbars(mRenderer);
 
     mPlayer->Draw(mRenderer);
-
-    //mRenderer.DrawText(400, 300, "Hello world");
 
     SDL_GL_SwapWindow(mWindow);
 }

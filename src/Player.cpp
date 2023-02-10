@@ -41,6 +41,8 @@ Player::Player(Vector2 position, Texture texture) : Sprite(position, texture)
     // set default state to idle
     mState = PlayerState::STATE_MOVE;
 
+    mFacingDirection2 = Vector2(0.0, -1.0f);
+
     // pugi::xml_document doc;
     // pugi::xml_parse_result result = doc.load_file("xml/anim.xml");
     // std::cout << "parse result: " << result.description() << "\n";
@@ -186,19 +188,19 @@ void Player::HandleInput(Input& input)
         case PlayerState::STATE_MOVE:
             // movement
             if (input.IsKeyHeld(SDL_SCANCODE_W) || input.IsKeyHeld(SDL_SCANCODE_UP)) {
-                mDirection.y = -1.0f;
+                mDirection.y = mFacingDirection2.y = -1.0f;
                 mFacingDirection = FacingDirection::FACING_NORTH;
             }
             if (input.IsKeyHeld(SDL_SCANCODE_A) || input.IsKeyHeld(SDL_SCANCODE_LEFT)) {
-                mDirection.x = -1.0f;
+                mDirection.x = mFacingDirection2.x = -1.0f;
                 mFacingDirection = FacingDirection::FACING_WEST;
             }
             if (input.IsKeyHeld(SDL_SCANCODE_S) || input.IsKeyHeld(SDL_SCANCODE_DOWN)) {
-                mDirection.y = 1.0f;
+                mDirection.y = mFacingDirection2.y = 1.0f;
                 mFacingDirection = FacingDirection::FACING_SOUTH;
             }
             if (input.IsKeyHeld(SDL_SCANCODE_D) || input.IsKeyHeld(SDL_SCANCODE_RIGHT)) {
-                mDirection.x = 1.0f;
+                mDirection.x = mFacingDirection2.x = 1.0f;
                 mFacingDirection = FacingDirection::FACING_EAST;
             }
 

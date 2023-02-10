@@ -8,16 +8,6 @@
 #include <string>
 #include "Texture.h"
 
-struct FTCharacter
-{
-    GLuint id;
-    unsigned int w;
-    unsigned int h;
-    int bearingX;
-    int bearingY;
-    long int advance;
-};
-
 // singleton?
 class Renderer
 {
@@ -30,13 +20,9 @@ public:
     void InitPartialVbo();
     void InitMapData(int mapWidth, int mapHeight, uint8_t* tileData, int tileSize);
 
-    void InitTextData();
-    void LoadFont(const char* font, unsigned int fontSize);
-
     void DrawSprite(float x, float y, Texture& texture);
     void DrawPartialSprite(float x, float y, int offsetX, int offsetY, int w, int h, Texture& texture);
     void DrawMap(Texture& texture);
-    void DrawText(float x, float y, std::string text);
 
     void DrawRectangle(float x, float y, int w, int h, float r, float g, float b, float a);
 
@@ -59,11 +45,6 @@ private:
     GLuint mMapVbo;
     GLuint mMapEbo;
     GLuint mMapVao;
-
-    // text data
-    GLuint mTextVbo;
-    GLuint mTextVao;
-    std::map<char, FTCharacter> mCharacters; // precalculated character table
 
     int mTileMapLength;
     int mTileSize;
