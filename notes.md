@@ -17,3 +17,5 @@ Default to Idle state. Check if player is in range at fixed intervals, if player
 other libs
 OpenAL
 miniz datacompression
+
+distributable needs SDL2.dll and sndfile.dll 

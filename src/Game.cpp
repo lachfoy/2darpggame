@@ -4,8 +4,11 @@
 #include <iostream>
 #include <cmath> // floor
 
+#include "sndfile.h"
+
 #include <AL/al.h>
 #include <AL/alc.h>
+#include <Windows.h> // SLEEP , delete later
 
 bool Game::Init()
 {
@@ -62,14 +65,14 @@ bool Game::Init()
     // wireframe
     //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-    // Open AL
+    // init Open AL
     const ALCchar *name;
     ALCdevice *device;
     ALCcontext *ctx;
 
     device = NULL;
 
-    device = alcOpenDevice(NULL);
+    device = alcOpenDevice(NULL); 
     if (!device) std::cout << "Could not open AL device\n";
 
     ctx = alcCreateContext(device, NULL);
@@ -78,6 +81,66 @@ bool Game::Init()
 
     std::cout << "Audio:: Opened " << name << "\n";
 
+    // load sound
+    SNDFILE *sndfile;
+    SF_INFO sfinfo;
+    sndfile = sf_open("sounds/swing.wav", SFM_READ, &sfinfo);
+
+    if (!sndfile) {
+        std::cout << "Could not load sound: " << sf_strerror(sndfile) << "\n";
+    }
+
+    std::cout << "channels: " << sfinfo.channels << "\n"; // assume 2 , i.e. AL_FORMAT_STEREO16
+    
+    short *membuf = new short[sfinfo.frames * sfinfo.channels];
+    sf_count_t num_frames = sf_readf_short(sndfile, membuf, sfinfo.frames);
+    if (num_frames < 1) {
+        delete[] membuf;
+        sf_close(sndfile);
+    }
+
+    ALuint buffer;
+    alGenBuffers(1, &buffer);
+    alBufferData(buffer, AL_FORMAT_STEREO16, membuf, (ALsizei)(num_frames * sfinfo.channels) * (ALsizei)sizeof(short), sfinfo.samplerate);
+
+    delete[] membuf;
+    sf_close(sndfile);
+
+    // if there is an error
+    ALenum err = alGetError();
+    if(err != AL_NO_ERROR) {
+        std::cout << "OpenAL Error: " << alGetString(err) << "\n";
+        if(buffer && alIsBuffer(buffer))
+            alDeleteBuffers(1, &buffer);
+    }
+
+    // create a source to play the sound with
+    ALuint source;
+    alGenSources(1, &source);
+    alSourcei(source, AL_BUFFER, buffer);
+    err = alGetError();
+    if(err != AL_NO_ERROR) {
+        std::cout << "OpenAL Error: " << alGetString(err) << "\n";
+    }
+
+
+    // play the sound
+    alSourcePlay(source);
+
+    // play
+    ALenum state;
+    alGetSourcei(source, AL_SOURCE_STATE, &state);
+    // check for errors
+    while (state == AL_PLAYING) {
+        alGetSourcei(source, AL_SOURCE_STATE, &state);
+        // check for errors
+    }
+
+    // delete sound
+    alDeleteSources(1, &source);
+    alDeleteBuffers(1, &buffer);
+
+    // close openAL
     alcMakeContextCurrent(NULL);
     alcDestroyContext(ctx);
     alcCloseDevice(device);
