@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
 #include <SDL2/SDL_opengl.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 
 #ifdef __APPLE__
 extern "C"
@@ -48,6 +50,10 @@ private:
     
     SDL_Window* mWindow;
     SDL_GLContext mContext;
+    
+    ALCdevice *mAlDevice;
+    ALCcontext *mAlContext;
+
     bool mRunning = true;
 
     lua_State *L;

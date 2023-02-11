@@ -5,10 +5,9 @@
 #include <cmath> // floor
 
 #include "sndfile.h"
-
-#include <AL/al.h>
-#include <AL/alc.h>
 #include <Windows.h> // SLEEP , delete later
+
+#include "Font.h"
 
 bool Game::Init()
 {
@@ -66,21 +65,14 @@ bool Game::Init()
     //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
     // init Open AL
-    const ALCchar *name;
-    ALCdevice *device;
-    ALCcontext *ctx;
-
-    device = NULL;
-
-    device = alcOpenDevice(NULL); 
-    if (!device) std::cout << "Could not open AL device\n";
-
-    ctx = alcCreateContext(device, NULL);
-
-    name = alcGetString(device, ALC_DEVICE_SPECIFIER);
-
+    const ALCchar *name = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+    mAlDevice = alcOpenDevice(name); 
+    if (!mAlDevice) std::cout << "Could not open AL device\n";
     std::cout << "Audio:: Opened " << name << "\n";
 
+    mAlContext = alcCreateContext(mAlDevice, NULL);
+    alcMakeContextCurrent(mAlContext);
+    
     // load sound
     SNDFILE *sndfile;
     SF_INFO sfinfo;
@@ -106,23 +98,10 @@ bool Game::Init()
     delete[] membuf;
     sf_close(sndfile);
 
-    // if there is an error
-    ALenum err = alGetError();
-    if(err != AL_NO_ERROR) {
-        std::cout << "OpenAL Error: " << alGetString(err) << "\n";
-        if(buffer && alIsBuffer(buffer))
-            alDeleteBuffers(1, &buffer);
-    }
-
     // create a source to play the sound with
     ALuint source;
     alGenSources(1, &source);
     alSourcei(source, AL_BUFFER, buffer);
-    err = alGetError();
-    if(err != AL_NO_ERROR) {
-        std::cout << "OpenAL Error: " << alGetString(err) << "\n";
-    }
-
 
     // play the sound
     alSourcePlay(source);
@@ -139,11 +118,6 @@ bool Game::Init()
     // delete sound
     alDeleteSources(1, &source);
     alDeleteBuffers(1, &buffer);
-
-    // close openAL
-    alcMakeContextCurrent(NULL);
-    alcDestroyContext(ctx);
-    alcCloseDevice(device);
 
     return true;
 }
@@ -211,6 +185,9 @@ void Game::Create()
 
     mPlayer->AddObserver(&EnemyManager::Instance()); // hmm....
 
+    Font fnt;
+    fnt.Load("fonts/terminal.fnt");
+
     // open lua
     L = luaL_newstate();
     luaL_openlibs(L); // open the base libraries
@@ -266,6 +243,10 @@ void Game::Destroy()
     delete mPlayer;
     
     lua_close(L);
+
+    // close openAL
+    alcDestroyContext(mAlContext);
+    alcCloseDevice(mAlDevice);
 
     SDL_GL_DeleteContext(mContext);
     SDL_DestroyWindow(mWindow);

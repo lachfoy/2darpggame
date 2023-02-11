@@ -266,6 +266,45 @@ void Renderer::DrawPartialSprite(float x, float y, int offsetX, int offsetY, int
     glBindVertexArray(0);
 }
 
+void Renderer::DrawString(std::string text, float x, float y, Font& font)
+{
+    glUseProgram(mShader);
+
+    // bind
+    glBindTexture(GL_TEXTURE_2D, font.textureHandle);
+    glBindVertexArray(mPartialVao);
+
+    // iterate through all characters
+    std::string::const_iterator c;
+    for (c = text.begin(); c != text.end(); c++)
+    {
+        CharInfo charInfo = font.chars[*c];
+
+        // ccw winding order
+        float vertices[24] = { 
+            // // xy       // uv
+            // 0.0f, 1.0f, tx0, ty1,
+            // 1.0f, 0.0f, tx1, ty0,
+            // 0.0f, 0.0f, tx0, ty0,
+
+            // 0.0f, 1.0f, tx0, ty1,
+            // 1.0f, 1.0f, tx1, ty1,
+            // 1.0f, 0.0f, tx1, ty0
+        };
+
+        glBindBuffer(GL_ARRAY_BUFFER, mPartialVbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        // draw
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+    
+    // draw
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+}
+
 void Renderer::DrawMap(Texture& texture)
 {
     glUseProgram(mShader);

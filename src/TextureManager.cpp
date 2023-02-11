@@ -1,6 +1,5 @@
 #include "TextureManager.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 #include <iostream>
@@ -8,7 +7,7 @@
 TextureManager::TextureManager()
 {
     // generate a default, single pixel, white texture
-    unsigned char* data = new unsigned char[3] { 0xff, 0xff, 0xff };
+    unsigned char data[3] = { 0xff, 0xff, 0xff };
     
     Texture texture;
 
@@ -31,9 +30,6 @@ TextureManager::TextureManager()
 
     // unbind texture
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    // free data
-    delete[] data;
 
     mTextures.insert({ "default", texture });
 }

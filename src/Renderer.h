@@ -3,10 +3,10 @@
 
 #include <glm/glm.hpp>
 #include <glad/glad.h>
-#include <iostream>
 #include <map>
 #include <string>
 #include "Texture.h"
+#include "Font.h"
 
 // singleton?
 class Renderer
@@ -22,6 +22,7 @@ public:
 
     void DrawSprite(float x, float y, Texture& texture);
     void DrawPartialSprite(float x, float y, int offsetX, int offsetY, int w, int h, Texture& texture);
+    void DrawString(std::string string, float x, float y, Font& font);
     void DrawMap(Texture& texture);
 
     void DrawRectangle(float x, float y, int w, int h, float r, float g, float b, float a);

@@ -7,6 +7,8 @@ OBJECTS := glad.o\
 	Input.o\
 	Random.o\
 	Vector2.o\
+	stb_image.o\
+	Font.o\
 	TextureManager.o\
 	Renderer.o\
 	Sprite.o\
