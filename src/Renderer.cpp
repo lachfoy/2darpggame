@@ -25,8 +25,9 @@ Renderer::~Renderer()
 void Renderer::InitShaders()
 {
     // shader stuff
-    // vertex shader
-    const char *vertexShaderSource = "#version 330 core\n"
+    CompileShaderProgram(
+        &mShader,
+        "#version 330 core\n"
         "layout (location = 0) in vec4 vertex;\n"
         "out vec2 TexCoords;\n"
         "uniform mat4 model;\n"
@@ -35,10 +36,8 @@ void Renderer::InitShaders()
         "{\n"
         "   TexCoords = vertex.zw;\n"
         "   gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);\n"
-        "}\0";
-
-    // fragment shader
-    const char *fragmentShaderSource = "#version 330 core\n"
+        "}\0",
+        "#version 330 core\n"
         "in vec2 TexCoords;\n"
         "out vec4 FragColor;\n"
         "uniform sampler2D image;\n"
@@ -47,25 +46,51 @@ void Renderer::InitShaders()
         "{\n"
         "   vec4 texColor = color * texture(image, TexCoords);\n"
         "   FragColor = texColor;\n"
-        "}\0";
+        "}\0"
+    );
     
-    CompileShaderProgram(&mShader, vertexShaderSource, fragmentShaderSource);
+    // text/ui shader
+    CompileShaderProgram(
+        &mTextShader,
+        "#version 330 core\n"
+        "layout (location = 0) in vec4 vertex;\n"
+        "out vec2 TexCoords;\n"
+        "uniform mat4 projection;\n"
+        "void main()\n"
+        "{\n"
+        "   TexCoords = vertex.zw;\n"
+        "   gl_Position = projection * vec4(vertex.xy, 0.0, 1.0);\n"
+        "}\0",
+        "#version 330 core\n"
+        "in vec2 TexCoords;\n"
+        "out vec4 FragColor;\n"
+        "uniform sampler2D image;\n"
+        "uniform vec4 color;\n"
+        "void main()\n"
+        "{\n"
+        "   vec4 texColor = color * texture(image, TexCoords);\n"
+        "   FragColor = texColor;\n"
+        "}\0"
+    );
 
-    // temp hardcoded -- set projection matrix
-    // if the view gets resized this will need to change
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(mRenderWidth), static_cast<float>(mRenderHeight), 0.0f);
-    
+    // set projection matrix
+    // if/when the view gets resized this will need to be updated
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(mScreenWidth), static_cast<float>(mScreenHeight), 0.0f);
     glUseProgram(mShader);
     glUniformMatrix4fv(glGetUniformLocation(mShader, "projection"), 1, false, glm::value_ptr(projection));
+
+    projection = glm::ortho(0.0f, static_cast<float>(mScreenWidth), static_cast<float>(mScreenHeight), 0.0f);
+    glUseProgram(mTextShader);
+    glUniformMatrix4fv(glGetUniformLocation(mTextShader, "projection"), 1, false, glm::value_ptr(projection));
 }
 
 void Renderer::SetCameraPosition(float x, float y)
 {
     glm::mat4 projection = glm::ortho(
-        x - mRenderWidth / 2.f,
-        x + mRenderWidth / 2.f,
-        y + mRenderHeight / 2.f,
-        y - mRenderHeight / 2.f
+        x - (mScreenWidth * mCameraScale) / 2.f,
+        x + (mScreenWidth * mCameraScale) / 2.f,
+        y + (mScreenHeight * mCameraScale) / 2.f,
+        y - (mScreenHeight * mCameraScale) / 2.f
     );
 
     glUseProgram(mShader);
@@ -107,6 +132,19 @@ void Renderer::InitPartialVbo()
     glGenBuffers(1, &mPartialVbo);
     glBindVertexArray(mPartialVao);
     glBindBuffer(GL_ARRAY_BUFFER, mPartialVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void Renderer::InitTextVbo()
+{
+    glGenVertexArrays(1, &mTextVao);
+    glGenBuffers(1, &mTextVbo);
+    glBindVertexArray(mTextVao);
+    glBindBuffer(GL_ARRAY_BUFFER, mTextVbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
@@ -268,11 +306,14 @@ void Renderer::DrawPartialSprite(float x, float y, int offsetX, int offsetY, int
 
 void Renderer::DrawString(std::string text, float x, float y, Font& font)
 {
-    glUseProgram(mShader);
+    glUseProgram(mTextShader);
+
+    // set color
+    glUniform4f(glGetUniformLocation(mShader, "color"), 1.f, 1.f, 1.f, 1.f);
 
     // bind
     glBindTexture(GL_TEXTURE_2D, font.textureHandle);
-    glBindVertexArray(mPartialVao);
+    glBindVertexArray(mTextVao);
 
     // iterate through all characters
     std::string::const_iterator c;
@@ -280,28 +321,34 @@ void Renderer::DrawString(std::string text, float x, float y, Font& font)
     {
         CharInfo charInfo = font.chars[*c];
 
+        // normalize texture coordinates for each character.. could be precalculated ig
+        float tx0 = charInfo.x * (1.0f / font.w);
+        float ty0 = charInfo.y * (1.0f / font.h);
+        float tx1 = (charInfo.x + charInfo.width) * (1.0f / font.w);
+        float ty1 = (charInfo.y + charInfo.height) * (1.0f / font.h);
+
         // ccw winding order
         float vertices[24] = { 
-            // // xy       // uv
-            // 0.0f, 1.0f, tx0, ty1,
-            // 1.0f, 0.0f, tx1, ty0,
-            // 0.0f, 0.0f, tx0, ty0,
+            // xy                                                                       // uv
+            x + charInfo.xoffset, y + charInfo.height + charInfo.yoffset,              tx0, ty1, // bottom left
+            x + charInfo.width + charInfo.xoffset, y + charInfo.yoffset,              tx1, ty0, // top right
+            x + charInfo.xoffset, y + charInfo.yoffset,                               tx0, ty0, // top left
 
-            // 0.0f, 1.0f, tx0, ty1,
-            // 1.0f, 1.0f, tx1, ty1,
-            // 1.0f, 0.0f, tx1, ty0
+            x + charInfo.xoffset, y + charInfo.height + charInfo.yoffset,                                 tx0, ty1, // bottom left
+            x + charInfo.width + charInfo.xoffset, y + charInfo.height + charInfo.yoffset,              tx1, ty1, // bottom right
+            x + charInfo.width + charInfo.xoffset, y + charInfo.yoffset,                                   tx1, ty0  // top right
         };
 
-        glBindBuffer(GL_ARRAY_BUFFER, mPartialVbo);
+        glBindBuffer(GL_ARRAY_BUFFER, mTextVbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         // draw
         glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        x += charInfo.advance;
     }
     
-    // draw
-    glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 }
 

@@ -18,6 +18,7 @@ public:
     void InitShaders();
     void InitQuadVertexData();
     void InitPartialVbo();
+    void InitTextVbo();
     void InitMapData(int mapWidth, int mapHeight, uint8_t* tileData, int tileSize);
 
     void DrawSprite(float x, float y, Texture& texture);
@@ -42,6 +43,9 @@ private:
     GLuint mPartialVbo;
     GLuint mPartialVao;
 
+    GLuint mTextVbo;
+    GLuint mTextVao;
+
     // map data
     GLuint mMapVbo;
     GLuint mMapEbo;
@@ -51,8 +55,9 @@ private:
     int mTileSize;
     const float mTileTexSize = 1.0f / 16.0f; // always 16 tiles per row in tileset
 
-    int mRenderWidth = 400/2;
-    int mRenderHeight = 300/2;
+    int mScreenWidth = 800;
+    int mScreenHeight = 600;
+    float mCameraScale = 0.25f;
 
     void CompileShaderProgram(GLuint* shader, const char* vertexSrc, const char* fragmentSrc);
     void CheckShaderCompilationError(GLuint id);

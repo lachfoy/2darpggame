@@ -173,20 +173,20 @@ void Game::Create()
     mRenderer.InitShaders();
     mRenderer.InitQuadVertexData();
     mRenderer.InitPartialVbo();
+    mRenderer.InitTextVbo();
 
     // test map generator
     mMap = Map::RandomMap(64, 64, TextureManager::Instance().GetTexture("images/tileset.png"), 16, mRenderer);
 
     // spawn player
-    mPlayer = new Player(Vector2(160.0f, 160.0f), TextureManager::Instance().GetTexture("images/character.png"));
+    mPlayer = new Player(Vector2(64.0f, 64.0f), TextureManager::Instance().GetTexture("images/character.png"));
 
     // spawn enemy
     EnemyManager::Instance().CreateEnemy(Vector2(240.0f, 240.0f), mPlayer, "scripts/enemy.lua");
 
     mPlayer->AddObserver(&EnemyManager::Instance()); // hmm....
 
-    Font fnt;
-    fnt.Load("fonts/terminal.fnt");
+    mFont.Load("fonts/techkr.fnt");
 
     // open lua
     L = luaL_newstate();
@@ -233,6 +233,8 @@ void Game::Draw()
     // EnemyManager::Instance().DrawEnemyHealthbars(mRenderer);
 
     mPlayer->Draw(mRenderer);
+
+    mRenderer.DrawString("Hp:100/100", 400, 300, mFont);
 
     SDL_GL_SwapWindow(mWindow);
 }

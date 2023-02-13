@@ -64,6 +64,8 @@ private:
     Renderer mRenderer;
     Input mInput;
 
+    Font mFont;
+
 };
 
 #endif

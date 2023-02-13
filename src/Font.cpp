@@ -64,11 +64,16 @@ void Font::Load(const char* path)
         char* pagesBlock = new char[blockSize];
         myfile.read(pagesBlock, blockSize);
 
-        std::cout << "Texture path: " << (const char*)pagesBlock << "\n";
+        std::string texturePath = "fonts/";
+        texturePath += (const char*)pagesBlock;
+        std::cout << "Texture path: " << texturePath << "\n";
 
         // load data
         int w, h, nChannels;
-        unsigned char* data = stbi_load((const char*)pagesBlock, &w, &h, &nChannels, 0);
+        unsigned char* data = stbi_load(texturePath.c_str(), &w, &h, &nChannels, 0);
+
+        this->w = w;
+        this->h = h;
 
         // create texture
         glGenTextures(1, &textureHandle);

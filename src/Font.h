@@ -24,6 +24,9 @@ public:
     void Load(const char* path);
 
     GLuint textureHandle;
+    int w;
+    int h;
+
     unsigned short lineHeight;
     unsigned short base;
     std::unordered_map<unsigned int, CharInfo> chars;
