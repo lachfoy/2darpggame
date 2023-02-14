@@ -23,7 +23,7 @@ public:
 
     void DrawSprite(float x, float y, Texture& texture);
     void DrawPartialSprite(float x, float y, int offsetX, int offsetY, int w, int h, Texture& texture);
-    void DrawString(std::string string, float x, float y, Font& font);
+    void DrawString(std::string string, float x, float y, Font& font, float scale = 1.0f);
     void DrawMap(Texture& texture);
 
     void DrawRectangle(float x, float y, int w, int h, float r, float g, float b, float a);

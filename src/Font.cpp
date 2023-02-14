@@ -54,6 +54,8 @@ void Font::Load(const char* path)
         char* commonBlock = new char[blockSize];
         myfile.read(commonBlock, blockSize);
 
+        lineHeight = commonBlock[0];
+
         delete[] commonBlock; // todo :: read baseline and other info?
 
         // third block (pages)
@@ -71,9 +73,6 @@ void Font::Load(const char* path)
         // load data
         int w, h, nChannels;
         unsigned char* data = stbi_load(texturePath.c_str(), &w, &h, &nChannels, 0);
-
-        this->w = w;
-        this->h = h;
 
         // create texture
         glGenTextures(1, &textureHandle);
@@ -113,15 +112,17 @@ void Font::Load(const char* path)
             CharInfo charInfo;
 
             charId = charBlock[0];
-            charInfo.x = charBlock[4];
-            charInfo.y = charBlock[6];
+            charInfo.texx0 = charBlock[4] * (1.0f / w);
+            charInfo.texy0 = charBlock[6] * (1.0f / h);
+            charInfo.texx1 = charInfo.texx0 + charBlock[8] * (1.0f / w);
+            charInfo.texy1 = charInfo.texy0 + charBlock[10] * (1.0f / h);
             charInfo.width = charBlock[8];
             charInfo.height = charBlock[10];
             charInfo.xoffset = charBlock[12];
             charInfo.yoffset = charBlock[14];
             charInfo.advance = charBlock[16];
 
-            std::cout << "Char " << i << " id: " << (char)charId << ", { " << charInfo.x << ", " << charInfo.y << ", " << charInfo.width << ", " << charInfo.height << ", " << charInfo.advance << " }\n";
+            std::cout << "Char " << i << " id: " << (char)charId << "\n";
             chars.insert({ charId, charInfo });
             delete[] charBlock;
         }

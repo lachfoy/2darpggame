@@ -186,7 +186,7 @@ void Game::Create()
 
     mPlayer->AddObserver(&EnemyManager::Instance()); // hmm....
 
-    mFont.Load("fonts/techkr.fnt");
+    mFont.Load("fonts/depixelhalbfett.fnt");
 
     // open lua
     L = luaL_newstate();
@@ -234,7 +234,7 @@ void Game::Draw()
 
     mPlayer->Draw(mRenderer);
 
-    mRenderer.DrawString("Hp:100/100", 400, 300, mFont);
+    mRenderer.DrawString("Hp: 10/10", 400, 300, mFont, 2.0f);
 
     SDL_GL_SwapWindow(mWindow);
 }

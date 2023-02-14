@@ -274,8 +274,8 @@ void Player::Draw(Renderer& renderer)
     mAnimations[mCurrentAnimation]->DrawCurrentFrame(renderer, mPosition, mTexture);
     
     // draw hitbox for debug
-    HitBox().Draw(renderer);
-    if (mState == PlayerState::STATE_ATTACK) AttackHitBox().Draw(renderer);
+    //HitBox().Draw(renderer);
+    //if (mState == PlayerState::STATE_ATTACK) AttackHitBox().Draw(renderer);
 }
 
 void Player::DrawHealthbar(Renderer& renderer)

@@ -304,7 +304,7 @@ void Renderer::DrawPartialSprite(float x, float y, int offsetX, int offsetY, int
     glBindVertexArray(0);
 }
 
-void Renderer::DrawString(std::string text, float x, float y, Font& font)
+void Renderer::DrawString(std::string text, float x, float y, Font& font, float scale)
 {
     glUseProgram(mTextShader);
 
@@ -316,37 +316,42 @@ void Renderer::DrawString(std::string text, float x, float y, Font& font)
     glBindVertexArray(mTextVao);
 
     // iterate through all characters
+    float startX = x;
     std::string::const_iterator c;
     for (c = text.begin(); c != text.end(); c++)
     {
-        CharInfo charInfo = font.chars[*c];
+        if (*c == '\n') {
+            y += font.lineHeight * scale;
+            x = startX;
+        } else {
+            CharInfo charInfo = font.chars[*c];
 
-        // normalize texture coordinates for each character.. could be precalculated ig
-        float tx0 = charInfo.x * (1.0f / font.w);
-        float ty0 = charInfo.y * (1.0f / font.h);
-        float tx1 = (charInfo.x + charInfo.width) * (1.0f / font.w);
-        float ty1 = (charInfo.y + charInfo.height) * (1.0f / font.h);
+            float posx = x + charInfo.xoffset * scale;
+            float posy = y + charInfo.yoffset * scale;
+            float w = charInfo.width * scale;
+            float h = charInfo.height * scale;
 
-        // ccw winding order
-        float vertices[24] = { 
-            // xy                                                                       // uv
-            x + charInfo.xoffset, y + charInfo.height + charInfo.yoffset,              tx0, ty1, // bottom left
-            x + charInfo.width + charInfo.xoffset, y + charInfo.yoffset,              tx1, ty0, // top right
-            x + charInfo.xoffset, y + charInfo.yoffset,                               tx0, ty0, // top left
+            // ccw winding order
+            float vertices[24] = { 
+                // xy                       // tex coords
+                posx, posy + h,             charInfo.texx0, charInfo.texy1, // bottom left
+                posx + w, posy,             charInfo.texx1, charInfo.texy0, // top right
+                posx, posy,                 charInfo.texx0, charInfo.texy0, // top left
 
-            x + charInfo.xoffset, y + charInfo.height + charInfo.yoffset,                                 tx0, ty1, // bottom left
-            x + charInfo.width + charInfo.xoffset, y + charInfo.height + charInfo.yoffset,              tx1, ty1, // bottom right
-            x + charInfo.width + charInfo.xoffset, y + charInfo.yoffset,                                   tx1, ty0  // top right
-        };
+                posx, posy + h,             charInfo.texx0, charInfo.texy1, // bottom left
+                posx + w, posy + h,         charInfo.texx1, charInfo.texy1, // bottom right
+                posx + w, posy,             charInfo.texx1, charInfo.texy0  // top right
+            };
 
-        glBindBuffer(GL_ARRAY_BUFFER, mTextVbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindBuffer(GL_ARRAY_BUFFER, mTextVbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        // draw
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+            // draw
+            glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        x += charInfo.advance;
+            x += charInfo.advance * scale;
+        }
     }
     
     glBindVertexArray(0);
